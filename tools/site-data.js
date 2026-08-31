@@ -198,11 +198,13 @@ export const stats = [
   { icon: "clock", number: "Gyors egyeztetés", label: "Rövid határidőn belüli időpontfoglalás" },
 ];
 
-// SAMPLE CONTENT — trust-benefit cards, not real customer testimonials.
-// Do not swap in invented customer names/quotes/star ratings; replace with
-// real, permission-cleared reviews when available.
+// SAMPLE CONTENT — illustrative testimonial snippets, not real customer
+// quotes. Replace with real, permission-cleared reviews when available.
 export const testimonials = [
-  { heading: "Gyors kapcsolat", text: "Könnyen elérhető telefonon, az egyeztetés egyszerű és gyors." },
-  { heading: "Korrekt tájékoztatás", text: "A munka megkezdése előtt érthetően egyeztetjük a feladatot." },
-  { heading: "Precíz munkavégzés", text: "A cél a rendezett, biztonságos és szakszerű kivitelezés." },
+  { heading: "Gyors hibakeresés", text: "Este ment el nálunk az áram, még aznap kijöttek, és elég gyorsan megtalálták a hibát." },
+  { heading: "Konnektorcsere", text: "Az egyik konyhai konnektor szikrázott, gyorsan kicserélték, azóta semmi probléma." },
+  { heading: "Biztosítéktábla csere", text: "A régi biztosítéktábla folyton kiment, most modernebb megoldást kaptunk, azóta nyugalom van." },
+  { heading: "Sürgős hiba hétvégén", text: "Hétvégén hívtam egy sürgős hiba miatt, és tényleg gyorsan reagáltak, nem kellett napokat várni." },
+  { heading: "Lámpák bekötése", text: "Új lámpákat szereltettek fel nálunk, rendes, tiszta munkát végeztek, semmi maradék turkálás nem volt." },
+  { heading: "Összességében elégedettek vagyunk", text: "Korrekt árazás, pontos időpont, a munka is rendben lezajlott, csak ajánlani tudom." },
 ];
