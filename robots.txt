@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /koszonjuk/
+
+Sitemap: https://[DOMAIN]/sitemap.xml
