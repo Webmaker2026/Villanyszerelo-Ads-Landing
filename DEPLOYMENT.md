@@ -65,12 +65,13 @@ for example:
   JSON
 - A hosting-provider form handler, if your host offers one
 
-Until `formEndpoint` is set to a real URL, the site runs in **dev mode**:
-submitting a form shows a visible on-page warning, logs a console warning,
-and simulates success (redirecting to `/koszonjuk/`) purely so you can test
-the UI. **This must not go live un-configured** — real leads would be lost
-silently otherwise (which is why the dev-mode warning exists and is
-intentionally visible, not hidden).
+Until `formEndpoint` is set to a real URL, the form falls back to opening a
+pre-filled `mailto:` draft addressed to `BUSINESS_DATA.email`, with an
+on-page status message telling the visitor to send it (or call instead) —
+see `assets/js/app.js`. This keeps the public UI professional and avoids
+losing leads silently, but it is **not a substitute for a real endpoint**:
+the visitor must still hit send in their own mail client. Configure a real
+`formEndpoint` as soon as possible for a frictionless submit.
 
 After configuring the endpoint:
 1. Submit the hero form with test data.
@@ -80,14 +81,14 @@ After configuring the endpoint:
 4. Confirm a deliberately-broken endpoint (e.g. wrong URL) shows the
    on-page error message rather than failing silently.
 
-## 4. Configure Google Tag Manager (`[GTM_ID]`)
+## 4. Configure Google Tag Manager (`gtmId`)
 
-Replace `[GTM_ID]` in `assets/js/business-data.js` (for reference) and — as
-this is a static site — in **every HTML file's GTM snippet**. If you're
-using the Node generator, this is one edit in `tools/site-data.js`
-(`gtmId`), then re-run `node tools/generate.mjs`. If editing HTML directly,
-find-and-replace `[GTM_ID]` across all `.html` files (it appears twice per
-page: the `<head>` script and the `<body>` `<noscript>` fallback).
+`gtmId` is currently empty in `tools/site-data.js`, and `generate.mjs`
+deliberately skips emitting the GTM `<head>`/`<body>` snippet whenever it's
+empty (see `gtmHead()`/`gtmBody()`) — no broken/placeholder GTM request
+ships to visitors. To enable it, set `gtmId` in `tools/site-data.js` (and
+mirror it in `assets/js/business-data.js`), then re-run
+`node tools/generate.mjs`.
 
 See [docs/tracking-handoff.md](docs/tracking-handoff.md) for the full event
 list to wire up inside GTM.
@@ -127,19 +128,20 @@ them). Exact size/crop/format guidance:
 
 ## 8. What must NOT remain TODO before production
 
-- [ ] Every `[BRACKETED_PLACEHOLDER]` replaced with a real value, or
-      intentionally left as a visible TODO only in an internal/staging
-      environment — never on the live public site.
-- [ ] `[FORM_ENDPOINT]` configured and tested end-to-end.
-- [ ] `[GTM_ID]` configured and tested (check GTM's Preview mode).
-- [ ] Placeholder SVG images replaced with real photography.
-- [ ] Testimonial placeholders (`[VALÓDI ÜGYFÉLVÉLEMÉNY HELYE]`) replaced
-      with real, permission-cleared reviews — or the section removed if you
-      don't have any yet. Do not fabricate reviews.
-- [ ] Stats row numbers (`[REVIEW_COUNT]`, `[YEARS_EXPERIENCE]`,
-      `[WARRANTY_TEXT]`, `[AVAILABILITY]`) confirmed accurate.
-- [ ] `/adatvedelem/` and `/cookie-tajekoztato/` reviewed by someone
-      qualified to confirm legal accuracy (see README-FIRST.md §5).
-- [ ] `sitemap.xml` / `robots.txt` domain matches the live domain (re-run
-      the generator after setting `[DOMAIN]`, or find-and-replace).
+Business data (brand, phone, email, domain, service area) is filled in —
+see `tools/site-data.js`. Still outstanding:
+
+- [ ] `formEndpoint` — a real form backend URL (site currently falls back
+      to a `mailto:` draft, see §3).
+- [ ] `gtmId` — a real GTM container ID (tracking snippet is omitted
+      entirely until this is set, see §4).
+- [ ] Placeholder SVG illustrations (`assets/images/*.svg`) replaced with
+      real, licensed photography — see docs/image-requirements.md.
+- [ ] Homepage trust cards (`testimonials` in `tools/site-data.js`) are
+      SAMPLE CONTENT (benefit statements, not real reviews) — replace with
+      real, permission-cleared customer reviews once available. Do not
+      fabricate names, quotes, or star ratings.
+- [ ] `/adatvedelem/` reviewed by someone qualified (lawyer or business
+      owner) to confirm legal accuracy — in particular it currently has no
+      company registration number, tax number, or street address on file.
 - [ ] HTTPS active on the live domain.

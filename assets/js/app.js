@@ -38,16 +38,12 @@
      Lead forms (hero + contact page)
   --------------------------------------------------------- */
   var endpoint = (window.BUSINESS_DATA && window.BUSINESS_DATA.formEndpoint) || "";
-  var endpointConfigured = endpoint && endpoint.indexOf("[") === -1;
+  var endpointConfigured = /^https?:\/\//i.test(endpoint);
+  var contactEmail = (window.BUSINESS_DATA && window.BUSINESS_DATA.email) || "";
 
   document.querySelectorAll("[data-lead-form]").forEach(function (form) {
     var startedTracking = false;
     var statusEl = form.querySelector("[data-form-status]");
-    var devNote = form.querySelector("[data-form-devnote]");
-
-    if (devNote && !endpointConfigured) {
-      devNote.classList.add("is-visible");
-    }
 
     form.addEventListener(
       "focusin",
@@ -84,15 +80,35 @@
         submitBtn.textContent = "Küldés...";
       }
 
+      // No form backend configured yet: fall back to a pre-filled mailto
+      // so the lead is never silently lost, and be upfront that the visitor
+      // still needs to hit send in their own mail app (with the phone
+      // number offered as the reliable alternative).
       if (!endpointConfigured) {
-        console.warn(
-          "[lead-form] FORM_ENDPOINT nincs beállítva (assets/js/business-data.js). " +
-            "A beküldés csak fejlesztői szimuláció — lásd DEPLOYMENT.md."
+        if (window.trackEvent) window.trackEvent("form_success", { form_id: form.id || "", mode: "mailto_fallback" });
+        if (contactEmail) {
+          var data = new FormData(form);
+          var lines = [
+            "Név: " + (data.get("name") || ""),
+            "Telefonszám: " + (data.get("phone") || ""),
+          ];
+          if (data.has("city")) lines.push("Település: " + (data.get("city") || ""));
+          lines.push("Üzenet: " + (data.get("message") || ""));
+          var mailto =
+            "mailto:" + contactEmail +
+            "?subject=" + encodeURIComponent("Ajánlatkérés a weboldalról") +
+            "&body=" + encodeURIComponent(lines.join("\n"));
+          window.location.href = mailto;
+        }
+        showStatus(
+          statusEl,
+          "success",
+          "Megnyitottuk az e-mail programját a kitöltött adatokkal — kérjük, küldje el az üzenetet. Ha nem nyílt meg, hívjon minket telefonon: " + (window.BUSINESS_DATA ? window.BUSINESS_DATA.phoneDisplay : "") + "."
         );
-        window.setTimeout(function () {
-          if (window.trackEvent) window.trackEvent("form_success", { form_id: form.id || "", mode: "dev_simulated" });
-          window.location.href = "/koszonjuk/";
-        }, 500);
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = submitBtn.dataset.originalText || "Küldés";
+        }
         return;
       }
 

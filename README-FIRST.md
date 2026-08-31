@@ -5,8 +5,10 @@ This is a static HTML/CSS/JS website built for Google Ads traffic. There is
 Upload the contents of this folder to your webhosting document root
 (`public_html/` or `www/`) and it works.
 
-Before going live, replace every placeholder below. Nothing on the site
-should still say `[BRAND_NAME]` or similar when it is public.
+Business data (brand, phone, email, domain, service area) is filled in —
+see `tools/site-data.js` / `assets/js/business-data.js`. Nothing on the
+public site should say `[BRAND_NAME]` or similar bracketed token; if you
+ever see one, it's a regression — see §2.
 
 ## 1. How content is structured
 
@@ -21,57 +23,50 @@ should still say `[BRAND_NAME]` or similar when it is public.
   header/footer/design instead of being hand-copy-pasted). See "Editing the
   site" below. Do not upload `tools/` to your host — it is not needed there.
 
-## 2. Placeholders you MUST replace
+## 2. Business data — how to change it
 
-Every one of these appears as a literal bracketed token across the HTML
-files, and also in `assets/js/business-data.js`. You can either:
+Business values (brand, phone, email, domain, service area) live in one
+place, `tools/site-data.js` (mirrored into `assets/js/business-data.js` for
+the client-side scripts). To change any of them:
 
-- **Find-and-replace** the token (e.g. `[BRAND_NAME]`) across all `.html`
-  files with your text editor, **or**
-- Edit the single source of truth in `tools/site-data.js` and
-  `assets/js/business-data.js`, then run `node tools/generate.mjs` to
-  regenerate every HTML file at once (requires Node.js, only for editing —
-  not for hosting).
+- Edit `tools/site-data.js` and `assets/js/business-data.js`, then run
+  `node tools/generate.mjs` to regenerate every HTML file at once (requires
+  Node.js, only for editing — not for hosting), **or**
+- If you're not using Node, find-and-replace the value directly across all
+  `.html` files.
 
-| Placeholder | Where it's used | Example replacement |
+| Field | Where it's used | Current value |
 |---|---|---|
-| `[BRAND_NAME]` | Logo, titles, footer, JSON-LD | "Kovács Villanyszerelés Kft." |
-| `[DOMAIN]` | Canonical URLs, JSON-LD, sitemap | "pelda-villanyszereles.hu" |
-| `[PHONE]` | Every visible phone number | "+36 30 123 4567" |
-| `[PHONE_TEL]` | Every `tel:` link (digits only, with country code) | "+36301234567" |
-| `[EMAIL]` | Footer, contact page | "info@pelda-villanyszereles.hu" |
-| `[PRIMARY_CITY]` | Headlines, meta titles, copy | "Debrecen" |
-| `[PRIMARY_SERVICE_AREA]` | Headlines, copy | "Hajdú-Bihar megye" |
-| `[COUNTY_OR_REGION]` | Service-area paragraphs, JSON-LD | "Hajdú-Bihar" |
-| `[ADDRESS]` | Footer, contact page, JSON-LD | "4024 Debrecen, Példa utca 1." |
-| `[OPENING_HOURS]` | Footer, contact page | "H-P 8:00-17:00" |
-| `[YEARS_EXPERIENCE]` | Stats row, Rólunk page | "12" |
-| `[WARRANTY_TEXT]` | Stats row, Rólunk page | "2 év" |
-| `[RESPONSE_TIME]` | Not shown until you confirm a real value — do not invent one | — |
-| `[GOOGLE_REVIEWS_URL]` | Footer Google icon | your Google Business Profile review link |
-| `[FACEBOOK_URL]` | Footer social icon | your Facebook page URL |
-| `[INSTAGRAM_URL]` | Footer social icon | your Instagram profile URL |
-| `[GTM_ID]` | Every page `<head>`/`<body>` | "GTM-XXXXXXX" |
-| `[FORM_ENDPOINT]` | Lead-form submission target | your form backend URL — see DEPLOYMENT.md |
-| `[REVIEW_COUNT]` / `[AVAILABILITY]` | Stats row on homepage | only fill in with real, verifiable numbers |
+| `brandName` | Logo, titles, footer, JSON-LD | "VeresVill 0–24" |
+| `domain` | Canonical URLs, JSON-LD, sitemap | "www.veresvill0-24.hu" |
+| `phoneDisplay` | Every visible phone number | "+36 70 728 3434" |
+| `phoneTel` | Every `tel:` link | "+36707283434" |
+| `email` | Footer, contact page, legal pages | "veresvill24@gmail.com" |
+| `primaryCity` | Headlines, meta titles, copy | "Budapest" |
+| `serviceArea` | Headlines, copy | "Pest vármegye" |
+| `gtmId` | Every page `<head>`/`<body>` | empty — snippet omitted until set, see DEPLOYMENT.md §4 |
+| `formEndpoint` | Lead-form submission target | empty — falls back to a `mailto:` draft, see DEPLOYMENT.md §3 |
 
-**Do not invent values for these.** If a fact isn't confirmed yet (years of
-experience, review count, warranty terms, response time), leave the
-bracketed placeholder in place — it is intentionally visible so nobody
-mistakes it for a real claim.
+**Do not invent values for facts not listed above** (years of experience,
+review count, warranty terms, response time, street address, opening
+hours) — the site is written to communicate benefits without needing
+those numbers. If you get a real, verifiable value later, add it
+deliberately rather than guessing.
 
-## 3. Testimonials and photos are placeholders on purpose
+## 3. Testimonials and photos still need real content
 
-- `assets/images/*.svg` are clearly-labelled placeholder graphics, **not**
-  stock photography of real people. Replace them with real business photos
-  before launch — see [docs/image-requirements.md](docs/image-requirements.md).
-- The three testimonial cards on the homepage say
-  `[VALÓDI ÜGYFÉLVÉLEMÉNY HELYE]` ("real customer review goes here"). Do not
-  replace these with invented quotes — only use real, permission-cleared
-  customer reviews (e.g. copied from Google with the customer's consent, or
-  collected directly).
-- The stats row (`[REVIEW_COUNT]`, `[YEARS_EXPERIENCE]`, `[WARRANTY_TEXT]`,
-  `[AVAILABILITY]`) must only show numbers you can stand behind.
+- `assets/images/*.svg` are stylised placeholder illustrations, **not**
+  stock photography. Replace them with real business photos before launch
+  — see [docs/image-requirements.md](docs/image-requirements.md).
+- The three "Miért érdemes minket választania" cards on the homepage
+  (`testimonials` in `tools/site-data.js`) are marked as **SAMPLE CONTENT**
+  — benefit statements, not real customer testimonials, and they
+  deliberately carry no star ratings or customer names. Replace with real,
+  permission-cleared customer reviews when available; do not fabricate
+  names, quotes, or ratings.
+- The stats row (`stats` in `tools/site-data.js`) is written as benefit
+  statements for the same reason — swap in real numbers only once you can
+  stand behind them.
 
 ## 4. Before you publish, also read
 
@@ -85,7 +80,9 @@ mistakes it for a real claim.
 ## 5. Legal pages need a real review
 
 `/adatvedelem/` (privacy policy) and `/cookie-tajekoztato/` (cookie notice)
-are structural templates with `[TODO: ...]` markers. They are **not** legal
-advice and must be reviewed/completed by someone qualified (a lawyer or the
-business owner) before publishing, especially the data-retention period and
-any data-processor list (form backend, analytics).
+are written as clean, no-TODO templates (see `adatvedelemPage()` /
+`cookiePage()` in `tools/generate.mjs`), but they are **not** legal advice.
+Have someone qualified (a lawyer or the business owner) review them before
+relying on them — in particular, `/adatvedelem/` currently has no company
+registration number, tax number, or street address on file, since none was
+provided; add these once available.

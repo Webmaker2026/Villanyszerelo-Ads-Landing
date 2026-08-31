@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-labelledby="t d">
-  <title id="t">Helyőrző kép — hero fotó cserélendő</title>
-  <desc id="d">Ide valódi fotó kerül villanyszerelőről munka közben, biztosítéktáblánál.</desc>
+  <title id="t">Villanyszerelő munka közben, biztosítéktáblánál (illusztráció)</title>
+  <desc id="d">Stilizált illusztráció villanyszerelőről munka közben, biztosítéktáblánál.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#16202f"/>
@@ -12,10 +12,7 @@
   </defs>
   <rect width="1600" height="900" fill="url(#bg)"/>
   <rect width="1600" height="900" fill="url(#grid)"/>
-  <g transform="translate(800,380)" fill="none" stroke="#f2b705" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="translate(800,450)" fill="none" stroke="#f2b705" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
     <path d="M20 -140 L-90 40 L-10 40 L-30 140 L100 -40 L20 -40 Z"/>
   </g>
-  <text x="800" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#ffffff">KÉP HELYE — HERO FOTÓ</text>
-  <text x="800" y="605" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#aab3c2">Cserélje ki: assets/images/hero-electrician.svg → valódi fotó</text>
-  <text x="800" y="635" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#6b7688">Ajánlott méret és leírás: docs/image-requirements.md</text>
 </svg>

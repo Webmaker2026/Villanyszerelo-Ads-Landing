@@ -18,10 +18,15 @@ function findService(slug) {
   return s;
 }
 
+// Only emit the GTM snippet once a real container ID is configured in
+// site-data.js — an empty/placeholder id would otherwise request a broken
+// GTM URL on every page load.
 function gtmHead() {
+  if (!biz.gtmId) return "";
   return `<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${biz.gtmId}');</script>`;
 }
 function gtmBody() {
+  if (!biz.gtmId) return "";
   return `<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${biz.gtmId}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>`;
 }
 
@@ -64,8 +69,8 @@ function headerHTML(activeSlug) {
       <a class="brand" href="/" aria-label="${biz.brandName} - főoldal">
         ${icon("bolt", "brand__mark")}
         <span class="brand__text">
-          <span class="brand__name">VILLANY<span>SZAKÉRTŐ</span></span>
-          <span class="brand__sub">${biz.brandName}</span>
+          <span class="brand__name">VERESVILL<span> 0–24</span></span>
+          <span class="brand__sub">Villanyszerelés</span>
         </span>
       </a>
       <nav class="main-nav" aria-label="Fő navigáció">
@@ -146,7 +151,6 @@ function leadFormHTML({ id, heading, headingAccent, desc, dark = true, compact =
           <input type="checkbox" name="consent" required>
           <span>Elfogadom az <a href="/adatvedelem/">adatkezelési tájékoztatót</a>.</span>
         </label>
-        <div class="form-note" data-form-devnote>⚠ FORM_ENDPOINT nincs beállítva (assets/js/business-data.js) — a küldés csak fejlesztői szimuláció. Lásd DEPLOYMENT.md.</div>
         <div class="form-status" data-form-status role="status" aria-live="polite"></div>
         <button type="submit" class="btn btn--yellow btn--block">${icon("arrowRight")}Küldés</button>
       </form>
@@ -254,6 +258,8 @@ function breadcrumbJsonLd(items, base) {
 }
 
 function localBusinessJsonLd() {
+  // Service-area business — no public customer-facing street address, so
+  // we deliberately omit streetAddress rather than invent one.
   return {
     "@context": "https://schema.org",
     "@type": "Electrician",
@@ -263,14 +269,12 @@ function localBusinessJsonLd() {
     email: biz.email,
     address: {
       "@type": "PostalAddress",
-      streetAddress: biz.address,
       addressLocality: biz.primaryCity,
-      addressRegion: biz.region,
+      addressRegion: biz.primaryCity,
       addressCountry: "HU",
     },
     areaServed: [biz.primaryCity, biz.serviceArea],
     url: `https://${biz.domain}/`,
-    openingHours: biz.openingHours,
   };
 }
 
@@ -316,16 +320,11 @@ function footerHTML() {
           <a class="brand" href="/" aria-label="${biz.brandName} - főoldal">
             ${icon("bolt", "brand__mark")}
             <span class="brand__text">
-              <span class="brand__name">VILLANY<span>SZAKÉRTŐ</span></span>
-              <span class="brand__sub">${biz.brandName}</span>
+              <span class="brand__name">VERESVILL<span> 0–24</span></span>
+              <span class="brand__sub">Villanyszerelés</span>
             </span>
           </a>
           <p class="footer-brand__desc">Villanyszerelési szolgáltatások ${biz.primaryCity}en és ${biz.serviceArea} területén. Telefonos egyeztetés, helyszíni felmérés, írásos ajánlat.</p>
-          <div class="footer-social">
-            <a href="${biz.facebookUrl}" aria-label="Facebook">${icon("facebook")}</a>
-            <a href="${biz.instagramUrl}" aria-label="Instagram">${icon("instagram")}</a>
-            <a href="${biz.googleReviewsUrl}" aria-label="Google vélemények">${icon("google")}</a>
-          </div>
         </div>
         <div>
           <p class="footer-heading">Gyors hivatkozások</p>
@@ -342,10 +341,9 @@ function footerHTML() {
         <div>
           <p class="footer-heading">Kapcsolat</p>
           <ul class="footer-contact">
-            <li>${icon("pin")}<span>${biz.address}</span></li>
+            <li>${icon("pin")}<span>${biz.primaryCity} és ${biz.serviceArea}</span></li>
             <li>${icon("phone")}<a href="tel:${biz.phoneTel}" data-track="phone_click" data-location="footer">${biz.phoneDisplay}</a></li>
             <li>${icon("mail")}<a href="mailto:${biz.email}" data-track="email_click" data-location="footer">${biz.email}</a></li>
-            <li>${icon("clock")}<span>${biz.openingHours}</span></li>
           </ul>
         </div>
       </div>
@@ -416,23 +414,23 @@ function documentHTML({ pageType, activeSlug, head, body }) {
    =========================================================== */
 function homePage() {
   const head = headHTML({
-    title: `Villanyszerelő ${biz.primaryCity} | ${biz.brandName}`,
+    title: `Villanyszerelő ${biz.primaryCity} és ${biz.serviceArea} | ${biz.brandName}`,
     description: `Megbízható villanyszerelés ${biz.primaryCity}en és ${biz.serviceArea} területén. Lakossági és ipari munkák, hibaelhárítás. Kérjen ajánlatot vagy hívjon minket.`,
     canonicalPath: "/",
     jsonLd: [localBusinessJsonLd(), { "@context": "https://schema.org", "@type": "WebSite", name: biz.brandName, url: `https://${biz.domain}/` }],
   });
 
-  const badges = ["Telefonos egyeztetés", "Írásos árajánlat", "Garanciális munkavégzés"]
+  const badges = ["Telefonos egyeztetés", "Írásos árajánlat", "Precíz kivitelezés"]
     .map((b) => `<div class="hero__badge">${icon("check")}<span>${b}</span></div>`)
     .join("\n          ");
 
   const body = `<section class="hero">
-    <div class="hero__bg" style="background-image:url('/assets/images/hero-electrician.svg')" role="img" aria-label="Villanyszerelő munka közben egy nyitott biztosítéktáblánál (csere előtti helyőrző kép)"></div>
+    <div class="hero__bg" style="background-image:url('/assets/images/hero-electrician.svg')" role="img" aria-label="Villanyszerelő munka közben egy nyitott biztosítéktáblánál"></div>
     <div class="hero__scrim"></div>
     <div class="container hero__inner">
       <div class="hero__content">
-        <p class="eyebrow">Villanyszerelés ${biz.primaryCity} és ${biz.serviceArea} területén</p>
-        <h1 class="hero__headline">Megbízható villanyszerelő<br>gyorsan. <mark>biztonságosan.</mark><br><mark>korrekten.</mark></h1>
+        <p class="eyebrow">Villanyszerelés ${biz.primaryCity}en és Pest vármegyében</p>
+        <h1 class="hero__headline">Megbízható villanyszerelés<br>gyorsan. <mark>precízen.</mark><br><mark>korrekten.</mark></h1>
         <p class="hero__lead">Lakossági és ipari villanyszerelés, hibaelhárítás és korszerűsítés ${biz.primaryCity}en és ${biz.serviceArea} térségében — telefonos egyeztetéssel és írásos ajánlattal.</p>
         <div class="hero__badges">
           ${badges}
@@ -465,7 +463,7 @@ function homePage() {
         <ul class="check-list">
           <li>${icon("check")}<span>Telefonos egyeztetés és helyszíni felmérés</span></li>
           <li>${icon("check")}<span>Írásos árajánlat a munka megkezdése előtt</span></li>
-          <li>${icon("check")}<span>${biz.warrantyText} garancia a elvégzett munkára</span></li>
+          <li>${icon("check")}<span>Precíz, rendezett munkavégzés</span></li>
         </ul>
         <a class="text-link text-link--dark" href="/rolunk/">Többet rólunk ${icon("arrowRight")}</a>
       </div>
@@ -487,21 +485,18 @@ function homePage() {
   <section class="section testimonials" id="referenciak" aria-labelledby="testimonials-heading">
     <div class="container">
       <div class="section-head">
-        <h2 class="section-title section-title--light" id="testimonials-heading">Ügyfeleink mondták</h2>
+        <h2 class="section-title section-title--light" id="testimonials-heading">Miért érdemes minket választania</h2>
       </div>
       <div class="testimonials__layout">
         <div class="testimonials__cards">
           ${testimonials
             .map(
               (t) => `<div class="testimonial-card">
-              <div class="testimonial-card__stars">${icon("star")}${icon("star")}${icon("star")}${icon("star")}${icon("star")}</div>
-              <p class="testimonial-card__quote">"${t.quote}"</p>
+              <div class="testimonial-card__stars">${icon("shieldCheck")}</div>
+              <p class="testimonial-card__quote">${t.text}</p>
               <div class="testimonial-card__author">
-                <span class="testimonial-card__avatar" aria-hidden="true">${t.name.replace("[", "").charAt(0) || "?"}</span>
-                <span>
-                  <span class="testimonial-card__name" style="display:block">${t.name}</span>
-                  <span class="testimonial-card__loc">${t.loc}</span>
-                </span>
+                <span class="testimonial-card__avatar" aria-hidden="true">${t.heading.charAt(0)}</span>
+                <span class="testimonial-card__name" style="display:block">${t.heading}</span>
               </div>
             </div>`
             )
@@ -578,7 +573,7 @@ function servicePage(service) {
         </ol>
 
         <h2>Szolgáltatási terület</h2>
-        <p>Ezt a szolgáltatást ${biz.primaryCity}en és ${biz.serviceArea} térségében (${biz.region}) vállaljuk. Ha nem biztos benne, hogy az Ön ingatlana a szolgáltatási területünkön van, hívjon minket telefonon.</p>
+        <p>Ezt a szolgáltatást ${biz.primaryCity}en és ${biz.serviceArea} számos településén vállaljuk. Ha nem biztos benne, hogy az Ön ingatlana a szolgáltatási területünkön van, hívjon minket telefonon.</p>
 
         <h2>Gyakori kérdések</h2>
         ${faqHTML(service.faqs, service.slug)}
@@ -633,8 +628,8 @@ function rolunkPage() {
         <ul class="check-list">
           <li>${icon("check")}<span>Telefonos egyeztetés és helyszíni felmérés minden munka előtt</span></li>
           <li>${icon("check")}<span>Írásos árajánlat, rejtett költségek nélkül</span></li>
-          <li>${icon("check")}<span>${biz.warrantyText} garancia az elvégzett munkára</span></li>
-          <li>${icon("check")}<span>${biz.yearsExperience} év szakmai tapasztalat</span></li>
+          <li>${icon("check")}<span>Igényes, szakszerű kivitelezés</span></li>
+          <li>${icon("check")}<span>Tapasztalt villanyszerelő szakértelem</span></li>
         </ul>
         <a class="btn btn--yellow" href="/kapcsolat/" data-track="quote_request" data-location="rolunk">${icon("arrowRight")}Kérjen ajánlatot</a>
       </div>
@@ -685,11 +680,10 @@ function kapcsolatPage() {
         <ul>
           <li>${icon("phone")}<span><a href="tel:${biz.phoneTel}" data-track="phone_click" data-location="kapcsolat_oldal">${biz.phoneDisplay}</a></span></li>
           <li>${icon("mail")}<span><a href="mailto:${biz.email}" data-track="email_click" data-location="kapcsolat_oldal">${biz.email}</a></span></li>
-          <li>${icon("pin")}<span>${biz.address}</span></li>
-          <li>${icon("clock")}<span>${biz.openingHours}</span></li>
+          <li>${icon("pin")}<span>${biz.primaryCity} és ${biz.serviceArea}</span></li>
         </ul>
         <h2>Szolgáltatási terület</h2>
-        <p>${biz.primaryCity} és ${biz.serviceArea} térsége, ${biz.region}.</p>
+        <p>${biz.primaryCity} teljes területén és ${biz.serviceArea} számos településén állunk rendelkezésére.</p>
       </div>
       <div>
         ${leadFormHTML({
@@ -762,13 +756,13 @@ function adatvedelemPage() {
     slug: "adatvedelem",
     title: "Adatkezelési tájékoztató",
     sections: [
-      { h: "1. Az adatkezelő", body: `<p>Adatkezelő: ${biz.brandName}, székhely/levelezési cím: ${biz.address}, e-mail: ${biz.email}, telefon: ${biz.phoneDisplay}.</p><p><strong>[TODO: ez a tartalom sablon, közzététel előtt jogi felülvizsgálat szükséges.]</strong></p>` },
+      { h: "1. Az adatkezelő", body: `<p>Adatkezelő: ${biz.brandName}, e-mail: ${biz.email}, telefon: ${biz.phoneDisplay}. Szolgáltatási terület: ${biz.primaryCity} és ${biz.serviceArea}.</p>` },
       { h: "2. Kezelt adatok köre", body: `<p>Az űrlapon megadott név, telefonszám, opcionálisan település és üzenet, valamint az e-mail címre írt levelek esetén az e-mail cím és az üzenet tartalma.</p>` },
       { h: "3. Az adatkezelés célja és jogalapja", body: `<p>Az adatkezelés célja az ajánlatkéréssel / megkereséssel kapcsolatos kapcsolatfelvétel. Jogalapja az érintett hozzájárulása (GDPR 6. cikk (1) bekezdés a) pont).</p>` },
-      { h: "4. Az adatok megőrzési ideje", body: `<p>[TODO: megőrzési időtartam meghatározása.]</p>` },
-      { h: "5. Adattovábbítás, adatfeldolgozók", body: `<p>[TODO: az esetlegesen igénybe vett űrlap-/tárhelyszolgáltató, GTM/analitikai szolgáltató feltüntetése.]</p>` },
+      { h: "4. Az adatok megőrzési ideje", body: `<p>Az adatokat a megkereséssel kapcsolatos ügyintézés lezárásáig, illetve — ha ebből szerződés jön létre — a szerződéses és számviteli kötelezettségek szerint irányadó jogszabályi határidőig kezeljük. Ezt követően, vagy ha az érintett a hozzájárulását visszavonja, az adatokat töröljük.</p>` },
+      { h: "5. Adattovábbítás, adatfeldolgozók", body: `<p>A kapcsolatfelvételi űrlapon megadott adatok jelenleg e-mailben (${biz.email}) jutnak el az adatkezelőhöz, külön űrlap-backend vagy más adatfeldolgozó igénybevétele nélkül. Amennyiben a jövőben mérési vagy hirdetési célú kód (pl. Google Tag Manager) kerül a weboldalra, ezt a tájékoztatót az érintett szolgáltatók feltüntetésével frissítjük.</p>` },
       { h: "6. Az érintett jogai", body: `<p>Az érintett kérelmezheti az adatkezelőtől a rá vonatkozó személyes adatokhoz való hozzáférést, azok helyesbítését, törlését vagy kezelésének korlátozását, és tiltakozhat az ilyen személyes adatok kezelése ellen.</p>` },
-      { h: "7. Panasz benyújtásának lehetősége", body: `<p>Panasszal a Nemzeti Adatvédelmi és Információszabadság Hatóságnál (NAIH) lehet élni. [TODO: elérhetőségek pontosítása.]</p>` },
+      { h: "7. Panasz benyújtásának lehetősége", body: `<p>Panasszal a Nemzeti Adatvédelmi és Információszabadság Hatóságnál (NAIH) lehet élni. Cím: 1055 Budapest, Falk Miksa utca 9-11.; postacím: 1363 Budapest, Pf. 9.; e-mail: ugyfelszolgalat@naih.hu; honlap: naih.hu.</p>` },
     ],
   });
 }
@@ -779,8 +773,8 @@ function cookiePage() {
     title: "Cookie tájékoztató",
     sections: [
       { h: "1. Mik azok a sütik (cookie-k)?", body: `<p>A sütik olyan kisméretű szövegfájlok, amelyeket a böngésző tárol el a weboldal működése és mérése céljából.</p>` },
-      { h: "2. Milyen sütiket használunk?", body: `<p>Az oldal működéséhez szükséges (essential) sütiket, valamint — az Ön hozzájárulása esetén — mérési/hirdetési célú sütiket a Google Tag Manageren (GTM) keresztül. Hozzájárulása előtt ezek a sütik alapértelmezetten letiltott (denied) állapotban vannak, a Consent Mode beállításnak megfelelően.</p>` },
-      { h: "3. Hozzájárulás kezelése", body: `<p>A hozzájárulását az oldalon megjelenő süti-sávon adhatja meg vagy vonhatja vissza. [TODO: GTM/Consent Mode konkrét taghez igazítása.]</p>` },
+      { h: "2. Milyen sütiket használunk?", body: `<p>Jelenleg a weboldal működéséhez szükséges (essential) sütiket használjuk, például a süti-sávon tett választásának megjegyzésére. Mérési vagy hirdetési célú sütik (pl. Google Tag Manageren keresztül) bevezetése esetén ezek alapértelmezetten letiltott (denied) állapotban indulnak, és csak az Ön előzetes hozzájárulása esetén aktiválódnak, a Consent Mode elveinek megfelelően.</p>` },
+      { h: "3. Hozzájárulás kezelése", body: `<p>A hozzájárulását az oldalon megjelenő süti-sávon adhatja meg vagy vonhatja vissza, az „Elfogadom” / „Elutasítom” gombokkal.</p>` },
       { h: "4. Böngésző beállítások", body: `<p>A sütik böngészőjében is korlátozhatók vagy törölhetők — ehhez a böngészője súgóját érdemes segítségül hívni.</p>` },
     ],
   });

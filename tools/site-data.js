@@ -1,24 +1,18 @@
 // Central content model consumed by tools/generate.mjs.
-// Business placeholders here MUST match assets/js/business-data.js.
+// Business values here MUST match assets/js/business-data.js.
+// gtmId / formEndpoint are intentionally empty until real values are
+// provided — generate.mjs guards all rendering so an empty value never
+// shows up on the page (see gtmHead/gtmBody and the lead-form fallback).
 export const biz = {
-  brandName: "[BRAND_NAME]",
-  domain: "[DOMAIN]",
-  phoneDisplay: "[PHONE]",
-  phoneTel: "[PHONE_TEL]",
-  email: "[EMAIL]",
-  primaryCity: "[PRIMARY_CITY]",
-  serviceArea: "[PRIMARY_SERVICE_AREA]",
-  region: "[COUNTY_OR_REGION]",
-  address: "[ADDRESS]",
-  openingHours: "[OPENING_HOURS]",
-  yearsExperience: "[YEARS_EXPERIENCE]",
-  responseTime: "[RESPONSE_TIME]",
-  warrantyText: "[WARRANTY_TEXT]",
-  googleReviewsUrl: "[GOOGLE_REVIEWS_URL]",
-  facebookUrl: "[FACEBOOK_URL]",
-  instagramUrl: "[INSTAGRAM_URL]",
-  gtmId: "[GTM_ID]",
-  formEndpoint: "[FORM_ENDPOINT]",
+  brandName: "VeresVill 0–24",
+  domain: "www.veresvill0-24.hu",
+  phoneDisplay: "+36 70 728 3434",
+  phoneTel: "+36707283434",
+  email: "veresvill24@gmail.com",
+  primaryCity: "Budapest",
+  serviceArea: "Pest vármegye",
+  gtmId: "",
+  formEndpoint: "",
 };
 
 export const nav = [
@@ -26,7 +20,7 @@ export const nav = [
   { label: "Szolgáltatások", href: "/#szolgaltatasok", slug: "services" },
   { label: "Hibaelhárítás", href: "/hibaelharitas/", slug: "hibaelharitas" },
   { label: "Rólunk", href: "/rolunk/", slug: "rolunk" },
-  { label: "Referenciák", href: "/#referenciak", slug: "referenciak" },
+  { label: "Miért mi", href: "/#referenciak", slug: "referenciak" },
   { label: "Kapcsolat", href: "/kapcsolat/", slug: "kapcsolat" },
 ];
 
@@ -37,10 +31,10 @@ export const services = [
     stripLine1: "LAKOSSÁGI",
     stripLine2: "VILLANYSZERELÉS",
     navLabel: "Villanyszerelés",
-    metaTitle: `Villanyszerelő ${biz.primaryCity} | ${biz.brandName}`,
+    metaTitle: `Villanyszerelés ${biz.primaryCity} és ${biz.serviceArea} | ${biz.brandName}`,
     metaDescription: `Lakossági villanyszerelés ${biz.primaryCity} és ${biz.serviceArea} területén: új bekötés, felújítás, bővítés. Hívjon telefonos egyeztetésért.`,
-    eyebrow: `VILLANYSZERELÉS ${biz.primaryCity} TERÜLETÉN`,
-    h1: `Villanyszerelés ${biz.primaryCity} területén`,
+    eyebrow: `VILLANYSZERELÉS ${biz.primaryCity}EN ÉS PEST VÁRMEGYÉBEN`,
+    h1: `Villanyszerelés ${biz.primaryCity}en és Pest vármegyében`,
     intro: `Teljes körű lakossági villanyszerelést vállalunk ${biz.primaryCity}en és ${biz.serviceArea} térségében — új bekötéstől a felújításon át a bővítésig. Az első lépés egy rövid telefonos egyeztetés, ahol átbeszéljük, mire van szüksége.`,
     problemsHeading: "Milyen esetben keressen minket?",
     problems: [
@@ -66,8 +60,8 @@ export const services = [
     navLabel: "Hibaelhárítás",
     metaTitle: `Villany hibaelhárítás ${biz.primaryCity} | ${biz.brandName}`,
     metaDescription: `Villanyszerelési hiba ${biz.primaryCity}en? Gyors diagnosztika és javítás zárlat, áramkimaradás vagy vibráló világítás esetén. Hívjon minket.`,
-    eyebrow: `VILLANY HIBAELHÁRÍTÁS ${biz.primaryCity} TERÜLETÉN`,
-    h1: `Villany hibaelhárítás ${biz.primaryCity} területén`,
+    eyebrow: `VILLANY HIBAELHÁRÍTÁS ${biz.primaryCity}EN ÉS PEST VÁRMEGYÉBEN`,
+    h1: `Villany hibaelhárítás ${biz.primaryCity}en és Pest vármegyében`,
     intro: `Elektromos hiba esetén a gyors és pontos diagnosztika a legfontosabb. Ezen az oldalon a hibaelhárítási és javítási szolgáltatásunkról olvashat — hívjon minket, ha áramkimaradást, zárlatgyanút vagy szokatlan jelenséget tapasztal.`,
     problemsHeading: "Mikor van szükség hibaelhárításra?",
     problems: [
@@ -93,8 +87,8 @@ export const services = [
     navLabel: "Biztosítéktábla",
     metaTitle: `Biztosítéktábla csere ${biz.primaryCity} | ${biz.brandName}`,
     metaDescription: `Elavult biztosítéktábla cseréje, korszerűsítése ${biz.primaryCity}en. Életvédelmi relé beépítése, mérés, jegyzőkönyv. Kérjen árajánlatot.`,
-    eyebrow: `BIZTOSÍTÉKTÁBLA CSERE ${biz.primaryCity} TERÜLETÉN`,
-    h1: `Biztosítéktábla csere és korszerűsítés ${biz.primaryCity}`,
+    eyebrow: `BIZTOSÍTÉKTÁBLA SZERELÉS ÉS CSERE ${biz.primaryCity}EN ÉS PEST VÁRMEGYÉBEN`,
+    h1: `Biztosítéktábla szerelés és csere ${biz.primaryCity}en és Pest vármegyében`,
     intro: `Egy elavult, kerámiabiztosítékos elosztótábla nemcsak kényelmetlen, hanem biztonsági kockázatot is jelenthet. Vállaljuk a biztosítéktábla cseréjét, korszerűsítését és az életvédelmi (FI-) relé beépítését.`,
     problemsHeading: "Mikor érdemes cserélni?",
     problems: [
@@ -120,8 +114,8 @@ export const services = [
     navLabel: "Konnektor és kapcsoló",
     metaTitle: `Konnektor és kapcsoló szerelés ${biz.primaryCity} | ${biz.brandName}`,
     metaDescription: `Konnektor, kapcsoló szerelés, csere és bővítés ${biz.primaryCity}en. Okos kapcsolók, USB-s aljzatok telepítése. Kérjen ajánlatot.`,
-    eyebrow: `KONNEKTOR ÉS KAPCSOLÓ SZERELÉS ${biz.primaryCity}`,
-    h1: `Konnektor és kapcsoló szerelés ${biz.primaryCity}`,
+    eyebrow: `KONNEKTOR ÉS KAPCSOLÓ SZERELÉS ${biz.primaryCity}EN ÉS PEST VÁRMEGYÉBEN`,
+    h1: `Konnektor és kapcsoló szerelés`,
     intro: `Kevés a konnektor, elkopott a kapcsoló, vagy okosotthon-eszközt szeretne beépíteni? Vállaljuk a konnektorok és kapcsolók cseréjét, bővítését és áthelyezését is.`,
     problemsHeading: "Milyen esetben keressen minket?",
     problems: [
@@ -147,8 +141,8 @@ export const services = [
     navLabel: "Világítás",
     metaTitle: `Világítás szerelés ${biz.primaryCity} | ${biz.brandName}`,
     metaDescription: `Lámpatest, csillár és spotlámpa felszerelés ${biz.primaryCity}en. Kültéri és beltéri világítás szerelése, LED korszerűsítés.`,
-    eyebrow: `VILÁGÍTÁS SZERELÉS ${biz.primaryCity} TERÜLETÉN`,
-    h1: `Világítás szerelés ${biz.primaryCity}`,
+    eyebrow: `VILÁGÍTÁS ÉS LÁMPA SZERELÉS ${biz.primaryCity}EN ÉS PEST VÁRMEGYÉBEN`,
+    h1: `Világítás és lámpa szerelés`,
     intro: `Lámpatest cseréjétől a teljes spotlámpás álmennyezet kialakításáig vállaljuk a világítási rendszerek szerelését és bekötését, beltéren és kültéren egyaránt.`,
     problemsHeading: "Milyen esetben keressen minket?",
     problems: [
@@ -174,8 +168,8 @@ export const services = [
     navLabel: "Autótöltő telepítés",
     metaTitle: `Elektromos autó töltő telepítés ${biz.primaryCity} | ${biz.brandName}`,
     metaDescription: `Otthoni wallbox és elektromos autó töltő telepítése ${biz.primaryCity}en, családi házhoz és társasházhoz is. Kérjen felmérést.`,
-    eyebrow: `ELEKTROMOS AUTÓ TÖLTŐ TELEPÍTÉSE ${biz.primaryCity}`,
-    h1: `Elektromos autó töltő telepítése ${biz.primaryCity}`,
+    eyebrow: `ELEKTROMOS AUTÓ TÖLTŐ TELEPÍTÉS ${biz.primaryCity}EN ÉS PEST VÁRMEGYÉBEN`,
+    h1: `Elektromos autó töltő telepítés`,
     intro: `Otthoni wallbox telepítését vállaljuk családi házhoz és társasházi parkolóhelyhez egyaránt — a hálózati kapacitás felmérésétől a beüzemelésig.`,
     problemsHeading: "Milyen esetben keressen minket?",
     problems: [
@@ -195,15 +189,20 @@ export const services = [
   },
 ];
 
+// Benefit-led, not numeric claims — we don't have verified figures (years
+// in business, review counts, response times) to stand behind yet.
 export const stats = [
-  { icon: "users", number: "[REVIEW_COUNT]", label: "Vásárlói vélemény" },
-  { icon: "calendar", number: biz.yearsExperience, label: "Év szakmai tapasztalat" },
-  { icon: "shieldCheck", number: "[WARRANTY_TEXT]", label: "Garancia a munkánkra" },
-  { icon: "clock", number: "[AVAILABILITY]", label: "Elérhetőség" },
+  { icon: "shieldCheck", number: "Megbízhatóság", label: "Korrekt, átlátható munkavégzés" },
+  { icon: "calendar", number: "Tapasztalat", label: "Szakértelem minden munkánál" },
+  { icon: "users", number: "Ügyfélközpontú", label: "Munkavégzés az Ön igényei szerint" },
+  { icon: "clock", number: "Gyors egyeztetés", label: "Rövid határidőn belüli időpontfoglalás" },
 ];
 
+// SAMPLE CONTENT — trust-benefit cards, not real customer testimonials.
+// Do not swap in invented customer names/quotes/star ratings; replace with
+// real, permission-cleared reviews when available.
 export const testimonials = [
-  { quote: "[VALÓDI ÜGYFÉLVÉLEMÉNY HELYE]", name: "[ÜGYFÉL NEVE]", loc: biz.primaryCity },
-  { quote: "[VALÓDI ÜGYFÉLVÉLEMÉNY HELYE]", name: "[ÜGYFÉL NEVE]", loc: biz.primaryCity },
-  { quote: "[VALÓDI ÜGYFÉLVÉLEMÉNY HELYE]", name: "[ÜGYFÉL NEVE]", loc: biz.serviceArea },
+  { heading: "Gyors kapcsolat", text: "Könnyen elérhető telefonon, az egyeztetés egyszerű és gyors." },
+  { heading: "Korrekt tájékoztatás", text: "A munka megkezdése előtt érthetően egyeztetjük a feladatot." },
+  { heading: "Precíz munkavégzés", text: "A cél a rendezett, biztonságos és szakszerű kivitelezés." },
 ];
