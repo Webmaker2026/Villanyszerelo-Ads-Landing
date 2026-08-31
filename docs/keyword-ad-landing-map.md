@@ -16,7 +16,8 @@ configured — keyword lists should also include city-modified variants
 | Fuse box | biztosítéktábla csere, kismegszakító csere, elosztó korszerűsítés | Fuse box | "Biztosítéktábla Csere [PRIMARY_CITY]" | `/biztositektabla/` | Biztosítéktábla csere és korszerűsítés [PRIMARY_CITY] | Ajánlatot kérek |
 | Sockets / switches | konnektor szerelés, kapcsoló csere, aljzat szerelés | Socket/switch | "Konnektor és Kapcsoló Szerelés" | `/konnektor-kapcsolo/` | Konnektor és kapcsoló szerelés [PRIMARY_CITY] | Ajánlatot kérek |
 | Lighting | lámpa felszerelés, világítás szerelés, csillár bekötés | Lighting | "Világítás Szerelés [PRIMARY_CITY]" | `/vilagitas/` | Világítás szerelés [PRIMARY_CITY] | Ajánlatot kérek |
-| EV charger | elektromos autó töltő telepítés, wallbox szerelés | EV charger | "Elektromos Autó Töltő Telepítés" | `/elektromos-auto-tolto/` | Elektromos autó töltő telepítése [PRIMARY_CITY] | Ajánlatot kérek |
+| SOS / emergency electrician | sos villanyszerelő, sürgős villanyszerelő, villanyszerelő azonnal, villany hibaelhárítás, nincs áram, lecsap a biztosíték, leold a fi relé, elektromos hiba, zárlat villanyszerelő | SOS / emergency | "SOS Villanyszerelő – Hívjon" | `/sos-villanyszerelo/` | Sürgős elektromos hiba? Hívjon most. | Hívás most |
+| Pricing / cost research | villanyszerelés árak, villanyszerelő díjak, mennyibe kerül egy villanyszerelő | Pricing | "Villanyszerelési Árak [PRIMARY_CITY]" | `/arak/` | Villanyszerelési árak | Hívás most |
 
 ## Notes on natural-language alignment
 
@@ -30,3 +31,20 @@ configured — keyword lists should also include city-modified variants
 - Broad "villanyszerelő [PRIMARY_CITY]" traffic should go to the homepage
   or `/villanyszereles/` depending on whether the ad group is
   brand/general or specifically about new installation work.
+- The SOS / emergency ad group intentionally bundles several urgent-intent
+  phrasings ("sos villanyszerelő", "sürgős villanyszerelő",
+  "villanyszerelő azonnal", "villany hibaelhárítás", "nincs áram",
+  "lecsap a biztosíték", "leold a fi relé", "elektromos hiba", "zárlat
+  villanyszerelő") into **one** ad group, because they all express the
+  same underlying intent (an active electrical fault, right now) and
+  should land on the same page (`/sos-villanyszerelo/`). Do not split
+  these into separate near-duplicate ad groups just because the surface
+  wording differs.
+- `/elektromos-auto-tolto/` (EV charger installation) is no longer one of
+  the six primary landing pages or ad groups — see
+  [google-ads-handoff.md](google-ads-handoff.md) for the current sitelink
+  set. The page still exists and resolves; do not point new campaigns at
+  it, but do not need to 404 it either.
+- `/arak/` is not its own high-volume ad group, but is useful for
+  explicit price-research queries ("mennyibe kerül egy villanyszerelő")
+  and as a secondary sitelink across every ad group above.

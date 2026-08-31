@@ -20,7 +20,7 @@ export const nav = [
   { label: "Szolgáltatások", href: "/#szolgaltatasok", slug: "services" },
   { label: "Hibaelhárítás", href: "/hibaelharitas/", slug: "hibaelharitas" },
   { label: "Rólunk", href: "/rolunk/", slug: "rolunk" },
-  { label: "Miért mi", href: "/#referenciak", slug: "referenciak" },
+  { label: "Árak", href: "/arak/", slug: "arak" },
   { label: "Kapcsolat", href: "/kapcsolat/", slug: "kapcsolat" },
 ];
 
@@ -77,7 +77,7 @@ export const services = [
       { q: "Mi történik, ha a hiba a mérőóra előtt van?", a: "Ez esetben a hálózati engedélyes (szolgáltató) illetékes — jelezzük, ha a helyszíni diagnosztika ezt állapítja meg." },
       { q: "Mennyibe kerül a hibakeresés?", a: "A díjazás a hiba jellegétől és a szükséges munkaidőtől függ, erről helyszíni felmérés vagy telefonos egyeztetés után adunk tájékoztatást." },
     ],
-    relatedSlugs: ["biztositektabla", "villanyszereles", "konnektor-kapcsolo"],
+    relatedSlugs: ["biztositektabla", "sos-villanyszerelo", "villanyszereles"],
   },
   {
     slug: "biztositektabla",
@@ -104,7 +104,7 @@ export const services = [
       { q: "Kikapcsol-e az áram a csere alatt az egész lakásban?", a: "Igen, a csere idejére a biztonságos munkavégzéshez szükséges az áramtalanítás, ennek időtartamáról előre tájékoztatjuk." },
       { q: "Szükséges-e engedély a cseréhez?", a: "Lakossági biztosítéktábla-cseréhez jellemzően nincs szükség külön hatósági engedélyre, de erről egyedi esetben tájékoztatást adunk." },
     ],
-    relatedSlugs: ["hibaelharitas", "villanyszereles", "elektromos-auto-tolto"],
+    relatedSlugs: ["hibaelharitas", "villanyszereles", "sos-villanyszerelo"],
   },
   {
     slug: "konnektor-kapcsolo",
@@ -158,11 +158,46 @@ export const services = [
       { q: "Kültéri lámpa szerelése mennyibe kerül?", a: "A pontos ár a lámpatest típusától és a szerelés összetettségétől függ, erről egyedi ajánlatot adunk." },
       { q: "Mozgásérzékelős világítást is szerelnek?", a: "Igen, mozgásérzékelős és szürkületkapcsolós világítást is telepítünk." },
     ],
-    relatedSlugs: ["konnektor-kapcsolo", "villanyszereles", "elektromos-auto-tolto"],
+    relatedSlugs: ["konnektor-kapcsolo", "villanyszereles", "hibaelharitas"],
+  },
+  {
+    slug: "sos-villanyszerelo",
+    icon: "alertCircle",
+    primary: true,
+    stripLine1: "SOS",
+    stripLine2: "VILLANYSZERELÉS",
+    navLabel: "SOS villanyszerelés",
+    metaTitle: `SOS villanyszerelő ${biz.primaryCity} | ${biz.brandName}`,
+    metaDescription: `SOS villanyszerelő ${biz.primaryCity}en és ${biz.serviceArea} területén: sürgős hibaelhárítás, zárlat, áramkimaradás, FI-relé leoldás. Hívja most: ${biz.phoneDisplay}.`,
+    eyebrow: `SOS VILLANYSZERELÉS • ${biz.primaryCity.toUpperCase()} ÉS PEST VÁRMEGYE`,
+    h1Lines: ["Sürgős elektromos hiba?", "Hívjon most."],
+    h1: `SOS villanyszerelő ${biz.primaryCity}en és Pest vármegyében`,
+    intro: `SOS villanyszerelő ${biz.primaryCity}en és Pest vármegyében: sürgős elektromos hibák — zárlatgyanú, áramkimaradás, folyamatosan lecsapó kismegszakító vagy leoldó FI-relé — esetén telefonon jelezze a problémát, és röviden egyeztetünk a kiszállásról.`,
+    problemsHeading: "Mikor érdemes SOS villanyszerelőt hívni?",
+    problems: [
+      "Elment az áram az ingatlanban",
+      "Folyamatosan lecsap a kismegszakító",
+      "Leold a FI-relé (életvédelmi relé)",
+      "Zárlat gyanúja",
+      "Szikrázik egy konnektor vagy kapcsoló",
+      "Égett szag tapasztalható",
+      "Melegszik egy elektromos szerelvény",
+      "Részleges áramkimaradás egy helyiségben vagy áramkörön",
+      "Sürgős elektromos hibakeresés szükséges",
+    ],
+    safetyNote: "Tűz, füst, aktív szikrázás vagy közvetlen veszély esetén elsődleges a biztonság: hagyja el a veszélyes területet, és szükség esetén hívja a 112-es segélyhívót. Ne nyúljon élő elektromos berendezéshez, és feszültség alatt lévő rendszeren ne végezzen önálló hibakeresést.",
+    faqs: [
+      { q: "Mennyi idő alatt érnek ki egy sürgős hiba esetén?", a: "A kiérkezési idő a napszaktól, a leterheltségtől és a helyszín távolságától függ — telefonos egyeztetéskor tájékoztatjuk a várható időpontról." },
+      { q: "Mit tegyek, amíg a szerelőre várok?", a: "Kerülje az érintett áramkör vagy készülék használatát, és ne nyúljon élő elektromos berendezéshez. Ha biztonságosan elérhető, kapcsolja le az érintett kismegszakítót — füst, égett szag vagy szikrázás esetén inkább hagyja el a helyiséget." },
+      { q: "Mennyibe kerül a kiszállás éjszaka vagy hétvégén?", a: "Hétköznap 06:00–18:00 között a kiszállás ingyenes, ezen kívül, valamint hétvégén és ünnepnapokon 10 000 Ft. A pontos díjakat lásd az árlistában." },
+      { q: "Ha nem életveszélyes vagy sürgős a probléma, mit tegyek?", a: "Ebben az esetben is hívhat minket, vagy tekintse meg a hibaelhárítási szolgáltatásunkat és kérjen normál ajánlatot." },
+    ],
+    relatedSlugs: ["hibaelharitas", "biztositektabla", "villanyszereles"],
   },
   {
     slug: "elektromos-auto-tolto",
     icon: "car",
+    primary: false,
     stripLine1: "ELEKTROMOS TÖLTŐK",
     stripLine2: "TELEPÍTÉSE",
     navLabel: "Autótöltő telepítés",
@@ -208,3 +243,54 @@ export const testimonials = [
   { heading: "Lámpák bekötése", text: "Új lámpákat szereltettek fel nálunk, rendes, tiszta munkát végeztek, semmi maradék turkálás nem volt." },
   { heading: "Összességében elégedettek vagyunk", text: "Korrekt árazás, pontos időpont, a munka is rendben lezajlott, csak ajánlani tudom." },
 ];
+
+// Business prices — net (nettó) amounts as supplied by the business.
+// Used by both /arak/ (full list) and the SOS price preview.
+export const pricing = {
+  minFee: {
+    label: "Minimum munkadíj",
+    value: "25 000 Ft",
+    desc: "Lámpák, kapcsolók és konnektorok esetén 1 db megrendelésekor.",
+  },
+  groups: [
+    {
+      id: "kiszallas",
+      heading: "Kiszállás",
+      rows: [
+        { service: "Kiszállás díja (sürgősségi esetén is)", price: "Ingyenes", note: "Hétköznap 06:00–18:00 között (napközben)." },
+        { service: "Kiszállás díja (sürgősségi esetén is)", price: "10 000 Ft", note: "Hétköznap 18:00–06:00, hétvégén és ünnepnapokon." },
+      ],
+    },
+    {
+      id: "sos",
+      heading: "SOS hibakeresés",
+      rows: [
+        { service: "Munkadíj", price: "10 000 Ft / óra", note: "Hétfő–péntek 08:00–20:00 között." },
+        { service: "Munkadíj (emelt díjas idősáv)", price: "15 000 Ft / óra", note: "Hétfő–péntek 20:00 után, hétvégén és ünnepnapokon." },
+      ],
+      showSosCta: true,
+    },
+    {
+      id: "szerelvenyek",
+      heading: "Lámpák, szerelvények, bekötések",
+      rows: [
+        { service: "Lámpák szerelése", price: "6 500 Ft-tól", note: "Meglévő kiállásra, átlagos belmagasság mellett." },
+        { service: "Kapcsolók, konnektorok cseréje / szerelése", price: "4 500 Ft-tól", note: "Meglévő dobozba, normál beltéri szerelvényekre." },
+        { service: "Kerámia / indukciós főzőlap / tűzhely bekötés", price: "25 000 Ft", note: "Garanciával, előkészített kiállásra, próbaüzemmel." },
+        { service: "Sütő, bojler, klíma bekötés", price: "20 000 Ft", note: "Garanciával, teljesítmény és keresztmetszet ellenőrzéssel." },
+        { service: "Lakáselosztó szerelés / korszerűsítés / FI-relé kiépítése", price: "Egyeztetés alapján", note: "Pontos ár a meglévő rendszer állapotától és igényektől függ." },
+      ],
+      showMinFee: true,
+    },
+    {
+      id: "lakaseloszto",
+      heading: "Lakáselosztó és egyéb díjak",
+      rows: [
+        { service: "Lakáselosztó szerelés / csere (4 kismegszakítóig)", price: "45 000 Ft", note: "Új elosztó szekrény szerelése, 4 darab kismegszakítóig." },
+        { service: "5. kismegszakítótól (anyaggal együtt)", price: "2 900 Ft / db", note: "Az alap csomagon felüli további kismegszakítók darabára." },
+        { service: "Helyszíni felmérés", price: "15 000 Ft", note: "Árajánlat elfogadása esetén a felmérés díja a végszámlából levonásra kerül." },
+        { service: "Szakvélemény készítése", price: "45 000 Ft", note: "Írásos szakvélemény meglévő hálózat állapotáról, fotókkal és jegyzetekkel." },
+      ],
+    },
+  ],
+};

@@ -532,11 +532,13 @@ input, textarea, select { font-family: inherit; font-size: 16px; }
   gap: 10px;
   padding: var(--space-6) var(--space-3);
   border-right: 1px solid #ececef;
+  border-bottom: 2px solid transparent;
   color: var(--ink);
-  transition: background .15s ease;
+  transition: background .15s ease, border-color .15s ease;
 }
 .service-strip__item:last-child { border-right: none; }
-.service-strip__item:hover { background: var(--off-white); }
+.service-strip__item:hover,
+.service-strip__item:focus-visible { background: var(--off-white); border-bottom-color: var(--yellow-500); }
 .service-strip__item svg { width: 30px; height: 30px; color: var(--yellow-600); }
 .service-strip__item span {
   font-size: 12.5px;
@@ -547,6 +549,27 @@ input, textarea, select { font-family: inherit; font-size: 16px; }
 }
 .service-strip__item[aria-current="page"] { background: var(--off-white); }
 .service-strip__item[aria-current="page"] svg { color: var(--yellow-500); }
+
+/* "RÉSZLETEK →" affordance — always visible (not hover-only) so mobile
+   visitors also see the card is clickable, per UX requirement. */
+.service-strip__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--yellow-600);
+}
+.service-strip__cta svg { width: 14px; height: 14px; color: var(--yellow-600); transition: transform .15s ease; }
+.service-strip__item:hover .service-strip__cta,
+.service-strip__item:focus-visible .service-strip__cta { color: var(--yellow-600); }
+.service-strip__item:hover .service-strip__cta svg,
+.service-strip__item:focus-visible .service-strip__cta svg { transform: translateX(3px); }
+
+.service-strip__more { text-align: center; padding-top: var(--space-5); }
 
 @media (max-width: 960px) {
   .service-strip__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -914,6 +937,132 @@ input, textarea, select { font-family: inherit; font-size: 16px; }
 }
 .thankyou__box { max-width: 560px; }
 .thankyou__icon { width: 56px; height: 56px; color: var(--yellow-500); margin-bottom: var(--space-5); }
+
+/* =========================================================
+   SOS problem grid + safety note
+   ========================================================= */
+.issue-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+.issue-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: var(--space-4) var(--space-5);
+  background: var(--white);
+  border: 1px solid #e7e9ee;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+.issue-card svg { width: 20px; height: 20px; color: var(--yellow-600); flex: none; margin-top: 2px; }
+@media (max-width: 640px) {
+  .issue-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.safety-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: var(--space-5);
+  background: var(--off-white);
+  border: 1px solid #e7e9ee;
+  border-left: 3px solid var(--error);
+  border-radius: var(--radius-md);
+}
+.safety-note svg { width: 22px; height: 22px; color: var(--error); flex: none; margin-top: 2px; }
+.safety-note p { color: var(--text-muted-light); font-size: 14px; margin: 0; }
+
+/* =========================================================
+   Pricing table (shared: /arak/ and SOS price preview)
+   ========================================================= */
+.price-table { display: flex; flex-direction: column; gap: 10px; margin: var(--space-5) 0; }
+.price-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4) var(--space-5);
+  background: var(--white);
+  border: 1px solid #e7e9ee;
+  border-radius: var(--radius-md);
+}
+.price-row__service { font-weight: 800; color: var(--ink); font-size: 15px; }
+.price-row__price { font-weight: 900; color: var(--yellow-600); font-size: 16.5px; white-space: nowrap; }
+.price-row__note { color: var(--text-muted-light); font-size: 13.5px; }
+
+@media (max-width: 760px) {
+  .price-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .price-row__price { font-size: 19px; }
+}
+
+.section--dark .price-row { background: var(--navy-850); border-color: var(--navy-border); }
+.section--dark .price-row__service { color: var(--white); }
+.section--dark .price-row__note { color: var(--text-muted-dark); }
+
+.price-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+.price-preview-grid h3 { color: var(--white); font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: var(--space-2); }
+@media (max-width: 760px) {
+  .price-preview-grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+}
+
+.cta-row { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-6); }
+
+.net-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-5);
+  padding: 8px 16px;
+  background: rgba(242, 183, 5, 0.12);
+  border: 1px solid var(--yellow-500);
+  border-radius: 999px;
+  color: var(--yellow-500);
+  font-size: 12.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.net-badge svg { width: 16px; height: 16px; }
+
+.min-fee-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: var(--space-5) 0;
+  padding: var(--space-5) var(--space-6);
+  background: rgba(242, 183, 5, 0.08);
+  border: 2px solid var(--yellow-500);
+  border-radius: var(--radius-md);
+}
+.min-fee-box__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--yellow-600);
+}
+.min-fee-box__label svg { width: 18px; height: 18px; }
+.min-fee-box__value { font-size: 28px; font-weight: 900; color: var(--ink); }
+.min-fee-box__desc { color: var(--text-muted-light); font-size: 14px; }
+
+/* Urgent (SOS) hero — same dark/gold system, CTA text allowed to wrap
+   on narrow screens instead of forcing overflow. */
+.page-hero--urgent .page-hero__ctas .btn { white-space: normal; text-align: center; }
 
 /* =========================================================
    Responsive base

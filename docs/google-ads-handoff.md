@@ -17,13 +17,26 @@ with your real domain once configured (e.g.
 | 3 | Biztosítéktábla | Elavult tábla cseréje, korszerűsítés | Életvédelmi relé beépítése | `/biztositektabla/` |
 | 4 | Konnektor és kapcsoló | Konnektor, kapcsoló csere, bővítés | Okos kapcsolók telepítése | `/konnektor-kapcsolo/` |
 | 5 | Világítás szerelés | Lámpatest, csillár, spotlámpa | Kültéri és beltéri világítás | `/vilagitas/` |
-| 6 | Autótöltő telepítés | Otthoni wallbox telepítése | Társasházi töltő kiépítése | `/elektromos-auto-tolto/` |
+| 6 | SOS villanyszerelés | Sürgős elektromos hiba? Hívjon most | Zárlat, áramkimaradás, FI-relé | `/sos-villanyszerelo/` |
 
 Each destination represents a **distinct user intent** — the visible H1 and
 copy on each page match its sitelink text so Ad Rank / landing-page
 relevance stay aligned. This does not guarantee a lower CPC; it only
 maximizes semantic/relevance alignment between the ad, the sitelink, and
 the page a click lands on.
+
+**Additional sitelink (pricing, not one of the six primary intents):**
+
+| Sitelink text | Description line 1 | Description line 2 | Destination URL |
+|---|---|---|---|
+| Árak | Tekintse meg díjainkat | Kiszállási és SOS díjak egy helyen | `/arak/` |
+
+> **Note on the former EV charger sitelink:** "Autótöltő telepítés"
+> (`/elektromos-auto-tolto/`) was replaced by SOS villanyszerelés as the
+> sixth primary sitelink/ad-group destination. The page itself still
+> exists (do not 404 any historically-run ad pointing at it), but it is no
+> longer part of the primary six-service architecture and should not be
+> used for new sitelinks, callouts, or ad groups.
 
 ## Ad-group → landing-page assignment
 
@@ -34,7 +47,8 @@ the page a click lands on.
 | Fuse box / panel upgrade | `/biztositektabla/` | Renovation & compliance-driven searches |
 | Sockets & switches | `/konnektor-kapcsolo/` | Smaller-ticket, high-volume searches |
 | Lighting installation | `/vilagitas/` | Includes outdoor/motion-sensor intent |
-| EV charger installation | `/elektromos-auto-tolto/` | Higher-consideration purchase, sidebar form doubles as a qualifying step |
+| SOS / emergency electrician | `/sos-villanyszerelo/` | Highest-intent, highest-urgency searches — page leads with a phone CTA and a price preview, not a lead form |
+| Pricing / cost research | `/arak/` | "Mennyibe kerül" / price-comparison searches — supports every ad group above as a secondary sitelink, not its own ad group |
 
 ## Suggested callout assets
 
@@ -43,6 +57,7 @@ Only use callouts you can factually support:
 - Írásos árajánlat
 - Helyszíni felmérés
 - Lakossági és ipari munkák
+- SOS kiszállás
 
 ## Suggested structured snippet (Service types)
 
@@ -51,7 +66,7 @@ Only use callouts you can factually support:
 - Biztosítéktábla
 - Konnektorok és kapcsolók
 - Világítás
-- Autótöltő telepítés
+- SOS villanyszerelés
 
 ## Recommended conversion actions
 

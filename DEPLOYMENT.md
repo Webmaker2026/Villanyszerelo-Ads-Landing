@@ -16,7 +16,9 @@ hibaelharitas/
 biztositektabla/
 konnektor-kapcsolo/
 vilagitas/
+sos-villanyszerelo/
 elektromos-auto-tolto/
+arak/
 rolunk/
 kapcsolat/
 koszonjuk/

@@ -30,6 +30,7 @@ export const icons = {
   send: svg('<path d="m4 4 16 8-16 8 3-8z"/>'),
   bulb: svg('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9V16h5v-.2c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3z"/>'),
   car: svg('<path d="M4 16v-3.5L6 7h12l2 5.5V16"/><path d="M4 16h16v2a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-1v-1h-9v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><circle cx="8" cy="16" r="1.4"/><circle cx="16" cy="16" r="1.4"/><path d="M12 7v3h4"/>'),
+  alertCircle: svg('<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.3v.1"/>'),
 };
 
 export function icon(name, cls) {

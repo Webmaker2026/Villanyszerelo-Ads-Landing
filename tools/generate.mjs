@@ -5,7 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { icon } from "./icons.mjs";
-import { biz, nav, services, stats, testimonials } from "./site-data.js";
+import { biz, nav, services, stats, testimonials, pricing } from "./site-data.js";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -17,6 +17,11 @@ function findService(slug) {
   if (!s) throw new Error(`Unknown service slug: ${slug}`);
   return s;
 }
+
+// The six services featured in primary navigation/strip/footer surfaces.
+// Services with `primary: false` (e.g. the legacy EV charger page) still
+// get a page + sitemap entry but are not promoted anywhere.
+const primaryServices = services.filter((s) => s.primary !== false);
 
 // Only emit the GTM snippet once a real container ID is configured in
 // site-data.js — an empty/placeholder id would otherwise request a broken
@@ -161,11 +166,12 @@ function leadFormHTML({ id, heading, headingAccent, desc, dark = true, compact =
    Service strip (homepage)
    =========================================================== */
 function serviceStripHTML(activeSlug) {
-  const items = services
+  const items = primaryServices
     .map(
       (s) => `<a class="service-strip__item" href="/${s.slug}/" data-track="service_click" data-service="${s.slug}" data-location="service_strip"${s.slug === activeSlug ? ' aria-current="page"' : ""}>
           ${icon(s.icon)}
           <span>${s.stripLine1}<br>${s.stripLine2}</span>
+          <span class="service-strip__cta">Részletek ${icon("arrowRight")}</span>
         </a>`
     )
     .join("\n        ");
@@ -174,6 +180,7 @@ function serviceStripHTML(activeSlug) {
       <div class="service-strip__grid">
         ${items}
       </div>
+      <p class="service-strip__more"><a class="text-link text-link--dark" href="/arak/">Teljes árlista ${icon("arrowRight")}</a></p>
     </div>
   </section>`;
 }
@@ -279,6 +286,35 @@ function localBusinessJsonLd() {
 }
 
 /* ===========================================================
+   Pricing rows (shared by /arak/ and the SOS price preview)
+   =========================================================== */
+function priceRowsHTML(rows) {
+  return rows
+    .map(
+      (r) => `<div class="price-row">
+          <div class="price-row__service">${r.service}</div>
+          <div class="price-row__price">${r.price}</div>
+          <div class="price-row__note">${r.note}</div>
+        </div>`
+    )
+    .join("\n        ");
+}
+
+function minFeeBoxHTML() {
+  return `<div class="min-fee-box">
+        <span class="min-fee-box__label">${icon("shieldCheck")}${pricing.minFee.label}</span>
+        <span class="min-fee-box__value">${pricing.minFee.value}</span>
+        <span class="min-fee-box__desc">${pricing.minFee.desc}</span>
+      </div>`;
+}
+
+function findPriceGroup(id) {
+  const g = pricing.groups.find((x) => x.id === id);
+  if (!g) throw new Error(`Unknown pricing group id: ${id}`);
+  return g;
+}
+
+/* ===========================================================
    Contact strip / footer / mobile bar / consent
    =========================================================== */
 function contactStripHTML() {
@@ -304,12 +340,13 @@ function footerHTML() {
     { label: "Szolgáltatások", href: "/#szolgaltatasok" },
     { label: "Hibaelhárítás", href: "/hibaelharitas/" },
     { label: "Rólunk", href: "/rolunk/" },
+    { label: "Árak", href: "/arak/" },
     { label: "Kapcsolat", href: "/kapcsolat/" },
   ]
     .map((l) => `<li><a href="${l.href}">${l.label}</a></li>`)
     .join("\n              ");
 
-  const serviceLinks = services
+  const serviceLinks = primaryServices
     .map((s) => `<li><a href="/${s.slug}/" data-track="service_click" data-service="${s.slug}" data-location="footer">${s.navLabel}</a></li>`)
     .join("\n              ");
 
@@ -454,7 +491,7 @@ function homePage() {
   <section class="section" aria-labelledby="about-heading">
     <div class="container about-grid">
       <div class="about-grid__media">
-        <img src="/assets/images/about-work.svg" alt="Villanyszerelő dolgozik egy nyitott kapcsolószekrénynél" width="640" height="480" loading="lazy">
+        <img src="/assets/images/villany-kezdolap.webp" alt="Villanyszerelő dolgozik egy nyitott kapcsolószekrénynél" width="640" height="480" loading="lazy">
       </div>
       <div class="about-grid__body">
         <p class="eyebrow">Rólunk</p>
@@ -503,7 +540,7 @@ function homePage() {
             .join("\n          ")}
         </div>
         <div class="testimonials__media">
-          <img src="/assets/images/ev-charger.svg" alt="Falra szerelt elektromos autó töltő" width="480" height="560" loading="lazy">
+          <img src="/assets/images/villany-fooldal-rolunk.webp" alt="Villanyszerelő szakember munka közben" width="480" height="560" loading="lazy">
         </div>
       </div>
     </div>
@@ -577,6 +614,8 @@ function servicePage(service) {
 
         <h2>Gyakori kérdések</h2>
         ${faqHTML(service.faqs, service.slug)}
+
+        <p style="margin-top:var(--space-6)"><a class="text-link text-link--dark" href="/arak/">Teljes árlista megtekintése ${icon("arrowRight")}</a></p>
       </div>
       <aside class="side-cta" id="ajanlatkeres">
         ${leadFormHTML({
@@ -595,6 +634,199 @@ function servicePage(service) {
   `;
 
   return documentHTML({ pageType: "service", activeSlug: service.slug, head, body });
+}
+
+/* ===========================================================
+   SOS VILLANYSZERELÉS (emergency landing page)
+   =========================================================== */
+function sosPage(service) {
+  const head = headHTML({
+    title: service.metaTitle,
+    description: service.metaDescription,
+    canonicalPath: `/${service.slug}/`,
+    jsonLd: [
+      breadcrumbJsonLd([
+        { label: "Főoldal", href: "/" },
+        { label: service.navLabel, href: `/${service.slug}/` },
+      ]),
+      {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        serviceType: service.navLabel,
+        provider: { "@type": "Electrician", name: biz.brandName },
+        areaServed: [biz.primaryCity, biz.serviceArea],
+        description: service.metaDescription,
+      },
+      faqJsonLd(service.faqs),
+    ],
+  });
+
+  const kiszallasGroup = findPriceGroup("kiszallas");
+  const sosGroup = findPriceGroup("sos");
+
+  const body = `${breadcrumbHTML([
+    { label: "Főoldal", href: "/" },
+    { label: service.navLabel, href: `/${service.slug}/` },
+  ])}
+  <section class="page-hero page-hero--urgent">
+    <div class="container">
+      <p class="page-hero__eyebrow">${service.eyebrow}</p>
+      <h1 class="page-hero__title">${service.h1Lines.join("<br>")}</h1>
+      <p class="page-hero__lead">${service.intro}</p>
+      <div class="page-hero__ctas">
+        <a class="btn btn--yellow" href="tel:${biz.phoneTel}" data-track="phone_click" data-location="sos_hero" data-service="${service.slug}">${icon("phone")}Hívás most</a>
+        <a class="btn btn--outline" href="/arak/#sos" data-track="cta_click" data-location="sos_hero" data-service="${service.slug}" data-button-type="prices">${icon("arrowRight")}SOS díjak megtekintése</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">SOS villanyszerelés</p>
+        <h2 class="section-title">${service.problemsHeading}</h2>
+      </div>
+      <div class="issue-grid">
+        ${service.problems.map((p) => `<div class="issue-card">${icon("warningTriangle")}<span>${p}</span></div>`).join("\n        ")}
+      </div>
+      <div class="safety-note">
+        ${icon("shieldCheck")}
+        <p>${service.safetyNote}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Átlátható SOS díjak</p>
+        <h2 class="section-title section-title--light">Kiszállás és SOS hibakeresés díjai</h2>
+      </div>
+      <div class="price-preview-grid">
+        <div>
+          <h3>${kiszallasGroup.heading}</h3>
+          <div class="price-table">
+            ${priceRowsHTML(kiszallasGroup.rows)}
+          </div>
+        </div>
+        <div>
+          <h3>${sosGroup.heading} munkadíj</h3>
+          <div class="price-table">
+            ${priceRowsHTML(sosGroup.rows)}
+          </div>
+        </div>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn--yellow" href="tel:${biz.phoneTel}" data-track="phone_click" data-location="sos_price_preview" data-service="${service.slug}">${icon("phone")}Hívás most</a>
+        <a class="btn btn--outline" href="/arak/" data-track="price_page_click" data-location="sos_price_preview">${icon("arrowRight")}Teljes árlista</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container content-grid">
+      <div class="prose">
+        <h2>Hogyan zajlik a munka?</h2>
+        <ol>
+          <li>Telefonos bejelentés — röviden elmondja, mi történt.</li>
+          <li>Egyeztetett kiszállás, sürgősségi esetben soron kívül.</li>
+          <li>Helyszíni hibakeresés és elhárítás.</li>
+          <li>Szükség esetén további javaslat írásos ajánlattal.</li>
+        </ol>
+
+        <h2>Szolgáltatási terület</h2>
+        <p>Az SOS villanyszerelést ${biz.primaryCity}en és ${biz.serviceArea} számos településén vállaljuk. Ha nem biztos benne, hogy az Ön ingatlana a szolgáltatási területünkön van, hívjon minket telefonon.</p>
+
+        <h2>Gyakori kérdések</h2>
+        ${faqHTML(service.faqs, service.slug)}
+      </div>
+      <aside class="side-cta" id="ajanlatkeres">
+        ${leadFormHTML({
+          id: `${service.slug}-form`,
+          heading: "SOS",
+          headingAccent: "ajánlatkérés",
+          desc: "Nem életveszélyes esetben itt is jelezheti igényét — sürgős hiba esetén inkább hívjon telefonon.",
+          compact: true,
+        })}
+      </aside>
+    </div>
+  </section>
+
+  ${relatedServicesHTML(service)}
+  ${contactStripHTML()}
+  `;
+
+  return documentHTML({ pageType: "service", activeSlug: service.slug, head, body });
+}
+
+/* ===========================================================
+   ÁRAK (pricing page)
+   =========================================================== */
+function priceGroupSectionHTML(group) {
+  const cta = group.showSosCta
+    ? `<div class="cta-row">
+        <a class="btn btn--yellow" href="tel:${biz.phoneTel}" data-track="phone_click" data-location="arak_${group.id}">${icon("phone")}SOS hívás: ${biz.phoneDisplay}</a>
+      </div>`
+    : "";
+  const minFee = group.showMinFee ? minFeeBoxHTML() : "";
+  return `<section class="section section--tight" id="${group.id}">
+    <div class="container">
+      <h2 class="section-title">${group.heading}</h2>
+      <div class="price-table">
+        ${priceRowsHTML(group.rows)}
+      </div>
+      ${minFee}
+      ${cta}
+    </div>
+  </section>`;
+}
+
+function arakPage() {
+  const head = headHTML({
+    title: `Villanyszerelés árak ${biz.primaryCity} | ${biz.brandName}`,
+    description: `Villanyszerelési árak ${biz.primaryCity}en és ${biz.serviceArea} területén: kiszállás, SOS hibakeresés, lámpák, konnektorok, lakáselosztó. Nettó árak, átlátható díjszabás.`,
+    canonicalPath: "/arak/",
+    jsonLd: [breadcrumbJsonLd([{ label: "Főoldal", href: "/" }, { label: "Árak", href: "/arak/" }])],
+  });
+
+  const body = `${breadcrumbHTML([{ label: "Főoldal", href: "/" }, { label: "Árak", href: "/arak/" }])}
+  <section class="page-hero">
+    <div class="container">
+      <p class="page-hero__eyebrow">Átlátható díjak</p>
+      <h1 class="page-hero__title">Villanyszerelési árak</h1>
+      <p class="page-hero__lead">Az alábbi árak nettó árak. A pontos munkadíj a feladat jellegétől és a helyszíni körülményektől függhet. Ahol fix árat tüntetünk fel, azt egyértelműen jelöljük.</p>
+      <span class="net-badge">${icon("check")}Nettó árak</span>
+    </div>
+  </section>
+
+  ${pricing.groups.map((g) => priceGroupSectionHTML(g)).join("\n  ")}
+
+  <section class="contact-strip">
+    <div class="container contact-strip__inner">
+      <div class="contact-strip__msg">
+        ${icon("phone")}
+        <div>
+          <p class="contact-strip__title">Nem találja a keresett munkát?</p>
+          <p class="contact-strip__sub">Telefonon röviden mondja el, milyen villanyszerelési munkára van szüksége.</p>
+        </div>
+      </div>
+      <a class="btn btn--dark" href="tel:${biz.phoneTel}" data-track="phone_click" data-location="arak_bottom">
+        ${icon("phone")}${biz.phoneDisplay}
+      </a>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="page-hero__ctas" style="margin-top:0">
+        <a class="btn btn--yellow" href="tel:${biz.phoneTel}" data-track="phone_click" data-location="arak_footer_cta">${icon("phone")}Hívás most</a>
+        <a class="btn btn--outline btn--outline-dark" style="color:var(--ink);border-color:#d8dbe2" href="/kapcsolat/" data-track="quote_request" data-location="arak_footer_cta">${icon("arrowRight")}Ajánlatot kérek</a>
+      </div>
+    </div>
+  </section>
+  `;
+
+  return documentHTML({ pageType: "pricing", activeSlug: "arak", head, body });
 }
 
 /* ===========================================================
@@ -620,7 +852,7 @@ function rolunkPage() {
   <section class="section">
     <div class="container about-grid">
       <div class="about-grid__media">
-        <img src="/assets/images/about-work.svg" alt="Villanyszerelő munka közben" width="640" height="480" loading="lazy">
+        <img src="/assets/images/rolunk-aloldal.webp" alt="Villanyszerelő munka közben" width="640" height="480" loading="lazy">
       </div>
       <div class="about-grid__body">
         <h2 class="section-title">Miért minket válasszon?</h2>
@@ -796,6 +1028,7 @@ function sitemapXml() {
   const urls = [
     "/",
     ...services.map((s) => `/${s.slug}/`),
+    "/arak/",
     "/rolunk/",
     "/kapcsolat/",
     "/adatvedelem/",
@@ -818,7 +1051,8 @@ function write(relPath, content) {
 }
 
 write("index.html", homePage());
-services.forEach((s) => write(`${s.slug}/index.html`, servicePage(s)));
+services.forEach((s) => write(`${s.slug}/index.html`, s.slug === "sos-villanyszerelo" ? sosPage(s) : servicePage(s)));
+write("arak/index.html", arakPage());
 write("rolunk/index.html", rolunkPage());
 write("kapcsolat/index.html", kapcsolatPage());
 write("koszonjuk/index.html", koszonjukPage());
