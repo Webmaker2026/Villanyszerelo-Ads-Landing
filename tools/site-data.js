@@ -5,7 +5,7 @@
 // shows up on the page (see gtmHead/gtmBody and the lead-form fallback).
 export const biz = {
   brandName: "VeresVill 0–24",
-  domain: "www.veresvill0-24.hu",
+  domain: "villanyszerelo-ads-landing.vercel.app",
   phoneDisplay: "+36 70 728 3434",
   phoneTel: "+36707283434",
   email: "veresvill24@gmail.com",

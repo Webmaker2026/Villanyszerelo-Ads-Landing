@@ -38,7 +38,7 @@ the client-side scripts). To change any of them:
 | Field | Where it's used | Current value |
 |---|---|---|
 | `brandName` | Logo, titles, footer, JSON-LD | "VeresVill 0–24" |
-| `domain` | Canonical URLs, JSON-LD, sitemap | "www.veresvill0-24.hu" |
+| `domain` | Canonical URLs, JSON-LD, sitemap | "villanyszerelo-ads-landing.vercel.app" |
 | `phoneDisplay` | Every visible phone number | "+36 70 728 3434" |
 | `phoneTel` | Every `tel:` link | "+36707283434" |
 | `email` | Footer, contact page, legal pages | "veresvill24@gmail.com" |

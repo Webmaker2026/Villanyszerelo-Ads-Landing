@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /koszonjuk/
 
-Sitemap: https://www.veresvill0-24.hu/sitemap.xml
+Sitemap: https://villanyszerelo-ads-landing.vercel.app/sitemap.xml
