@@ -233,26 +233,31 @@
         <div class="hero-panel">
       <p class="hero-panel__title">Villanyszerelés <span>ajánlatkérés</span></p>
       <p class="hero-panel__desc">Adja meg elérhetőségét, és egyeztetett időpontban visszahívjuk.</p>
-      <form class="lead-form" id="villanyszereles-form" data-lead-form novalidate>
+      <form class="lead-form" id="villanyszereles-form" action="/send-form.php" method="post" data-lead-form novalidate>
+        <input type="hidden" name="page_url" value="">
         <div class="form-field">
           <label for="villanyszereles-form-name">Név</label>
-          <input type="text" id="villanyszereles-form-name" name="name" autocomplete="name" required>
+          <input type="text" id="villanyszereles-form-name" name="name" autocomplete="name" maxlength="100" required>
           <span class="form-field__error">Adja meg a nevét.</span>
         </div>
         <div class="form-field">
           <label for="villanyszereles-form-phone">Telefonszám</label>
-          <input type="tel" id="villanyszereles-form-phone" name="phone" inputmode="tel" autocomplete="tel" required>
+          <input type="tel" id="villanyszereles-form-phone" name="phone" inputmode="tel" autocomplete="tel" maxlength="30" required>
           <span class="form-field__error">Adja meg a telefonszámát.</span>
         </div>
         
         <div class="form-field">
           <label for="villanyszereles-form-message">Probléma röviden (opcionális)</label>
-          <textarea id="villanyszereles-form-message" name="message" rows="3"></textarea>
+          <textarea id="villanyszereles-form-message" name="message" rows="3" maxlength="2000"></textarea>
         </div>
         <label class="form-consent">
-          <input type="checkbox" name="consent" required>
+          <input type="checkbox" name="privacy_consent" required>
           <span>Elfogadom az <a href="/adatvedelem/">adatkezelési tájékoztatót</a>.</span>
         </label>
+        <div class="form-honeypot" aria-hidden="true">
+          <label for="villanyszereles-form-website" tabindex="-1">Website</label>
+          <input type="text" id="villanyszereles-form-website" name="website" tabindex="-1" autocomplete="off">
+        </div>
         <div class="form-status" data-form-status role="status" aria-live="polite"></div>
         <button type="submit" class="btn btn--yellow btn--block"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Küldés</button>
       </form>

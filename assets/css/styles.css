@@ -65,8 +65,6 @@ p, li,
 .hero__lead,
 .page-hero__lead,
 .section-subtitle,
-.stats-row__number,
-.stats-row__label,
 .testimonial-card__quote,
 .hero-panel__title,
 .hero-panel__desc,
@@ -472,6 +470,18 @@ input, textarea, select { font-family: inherit; font-size: 16px; }
 .form-consent input { margin-top: 3px; flex: none; }
 .form-consent a { color: var(--yellow-500); font-weight: 700; }
 
+/* Anti-spam honeypot — invisible to sighted users, skipped by keyboard/
+   screen-reader nav; left blank by humans, often auto-filled by bots. */
+.form-honeypot {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .form-note {
   font-size: 12px;
   color: var(--text-muted-dark);
@@ -634,16 +644,40 @@ input, textarea, select { font-family: inherit; font-size: 16px; }
   gap: 8px;
   padding: var(--space-7) var(--space-4);
   border-right: 1px solid var(--navy-border);
+  min-width: 0;
 }
 .stats-row__item:last-child { border-right: none; }
 .stats-row__item svg { width: 30px; height: 30px; color: var(--yellow-500); }
+.stats-row__number,
+.stats-row__label {
+  /* Benefit words (e.g. "Ügyfélközpontú") must wrap at spaces, never mid-word. */
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  max-width: 100%;
+}
 .stats-row__number { font-size: 30px; font-weight: 900; color: var(--white); }
 .stats-row__label { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-muted-dark); font-weight: 700; }
 
-@media (max-width: 720px) {
+@media (max-width: 720px) and (min-width: 601px) {
   .stats-row__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stats-row__item:nth-child(2n) { border-right: none; }
   .stats-row__item { border-bottom: 1px solid var(--navy-border); }
+}
+
+/* At narrow phone widths a 2-column grid leaves too little space for long
+   Hungarian compound words at 30px/900-weight to fit without either
+   overflowing or being force-broken mid-word — one full-width row per
+   item is the readable option here (readability over preserving the grid). */
+@media (max-width: 600px) {
+  .stats-row__grid { grid-template-columns: minmax(0, 1fr); }
+  .stats-row__item {
+    border-right: none;
+    border-bottom: 1px solid var(--navy-border);
+    padding: var(--space-5) var(--space-5);
+  }
+  .stats-row__item:last-child { border-bottom: none; }
+  .stats-row__number { font-size: 22px; }
 }
 
 /* =========================================================

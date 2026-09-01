@@ -1,8 +1,9 @@
 // Central content model consumed by tools/generate.mjs.
 // Business values here MUST match assets/js/business-data.js.
-// gtmId / formEndpoint are intentionally empty until real values are
-// provided — generate.mjs guards all rendering so an empty value never
-// shows up on the page (see gtmHead/gtmBody and the lead-form fallback).
+// gtmId is intentionally empty until a real value is provided —
+// generate.mjs guards all rendering so an empty value never shows up on
+// the page (see gtmHead/gtmBody). Lead forms submit to the fixed
+// /send-form.php handler (see send-form.php + DEPLOYMENT.md).
 export const biz = {
   brandName: "VeresVill 0–24",
   domain: "villanyszerelo-ads-landing.vercel.app",
@@ -12,7 +13,6 @@ export const biz = {
   primaryCity: "Budapest",
   serviceArea: "Pest vármegye",
   gtmId: "",
-  formEndpoint: "",
 };
 
 export const nav = [

@@ -18,6 +18,11 @@ ever see one, it's a regression — see §2.
   placeholder value (phone, email, address, etc.).
 - `assets/js/app.js` — mobile nav, FAQ accordion, lead-form handling.
 - `assets/js/tracking.js` — GTM `dataLayer` bridge + consent banner.
+- `send-form.php` — **the one server-side file in this project.** Every
+  lead form POSTs here; it validates, sanitizes, emails the lead to
+  `veresvill24@gmail.com`, and redirects to `/koszonjuk/` on success. It
+  requires a PHP host (standard cPanel/shared hosting qualifies) — see
+  [DEPLOYMENT.md](DEPLOYMENT.md) §3.
 - `tools/` — **not required on the live server.** This is the Node.js
   generator used to author the site (so ~13 pages share one consistent
   header/footer/design instead of being hand-copy-pasted). See "Editing the
@@ -45,7 +50,11 @@ the client-side scripts). To change any of them:
 | `primaryCity` | Headlines, meta titles, copy | "Budapest" |
 | `serviceArea` | Headlines, copy | "Pest vármegye" |
 | `gtmId` | Every page `<head>`/`<body>` | empty — snippet omitted until set, see DEPLOYMENT.md §4 |
-| `formEndpoint` | Lead-form submission target | empty — falls back to a `mailto:` draft, see DEPLOYMENT.md §3 |
+
+Lead-form submission is **not** a configurable placeholder anymore — every
+form POSTs to the fixed `/send-form.php` handler (see
+[DEPLOYMENT.md](DEPLOYMENT.md) §3 for the recipient email and sender-domain
+requirement).
 
 **Do not invent values for facts not listed above** (years of experience,
 review count, warranty terms, response time, street address, opening

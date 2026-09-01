@@ -1,8 +1,7 @@
 /**
  * Single source of truth for editable business data, mirrored from
- * tools/site-data.js (which drives tools/generate.mjs). Only the fields
- * actually read at runtime by assets/js/app.js are required here
- * (formEndpoint); the rest is kept for consistency / future dynamic use.
+ * tools/site-data.js (which drives tools/generate.mjs). Lead forms submit
+ * to the fixed /send-form.php handler — see DEPLOYMENT.md.
  */
 window.BUSINESS_DATA = {
   brandName: "VeresVill 0–24",
@@ -12,6 +11,5 @@ window.BUSINESS_DATA = {
   email: "veresvill24@gmail.com",
   primaryCity: "Budapest",
   serviceArea: "Pest vármegye",
-  gtmId: "",
-  formEndpoint: ""
+  gtmId: ""
 };

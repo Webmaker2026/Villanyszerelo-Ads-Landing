@@ -129,15 +129,16 @@ function leadFormHTML({ id, heading, headingAccent, desc, dark = true, compact =
   return `<div class="hero-panel${dark ? "" : " card--light"}">
       <p class="hero-panel__title">${heading}${headingAccent ? ` <span>${headingAccent}</span>` : ""}</p>
       ${desc ? `<p class="hero-panel__desc">${desc}</p>` : ""}
-      <form class="lead-form" id="${id}" data-lead-form novalidate>
+      <form class="lead-form" id="${id}" action="/send-form.php" method="post" data-lead-form novalidate>
+        <input type="hidden" name="page_url" value="">
         <div class="form-field">
           <label for="${id}-name">Név</label>
-          <input type="text" id="${id}-name" name="name" autocomplete="name" required>
+          <input type="text" id="${id}-name" name="name" autocomplete="name" maxlength="100" required>
           <span class="form-field__error">Adja meg a nevét.</span>
         </div>
         <div class="form-field">
           <label for="${id}-phone">Telefonszám</label>
-          <input type="tel" id="${id}-phone" name="phone" inputmode="tel" autocomplete="tel" required>
+          <input type="tel" id="${id}-phone" name="phone" inputmode="tel" autocomplete="tel" maxlength="30" required>
           <span class="form-field__error">Adja meg a telefonszámát.</span>
         </div>
         ${
@@ -145,17 +146,21 @@ function leadFormHTML({ id, heading, headingAccent, desc, dark = true, compact =
             ? ""
             : `<div class="form-field">
           <label for="${id}-city">Település</label>
-          <input type="text" id="${id}-city" name="city" autocomplete="address-level2">
+          <input type="text" id="${id}-city" name="city" autocomplete="address-level2" maxlength="100">
         </div>`
         }
         <div class="form-field">
           <label for="${id}-message">Probléma röviden (opcionális)</label>
-          <textarea id="${id}-message" name="message" rows="3"></textarea>
+          <textarea id="${id}-message" name="message" rows="3" maxlength="2000"></textarea>
         </div>
         <label class="form-consent">
-          <input type="checkbox" name="consent" required>
+          <input type="checkbox" name="privacy_consent" required>
           <span>Elfogadom az <a href="/adatvedelem/">adatkezelési tájékoztatót</a>.</span>
         </label>
+        <div class="form-honeypot" aria-hidden="true">
+          <label for="${id}-website" tabindex="-1">Website</label>
+          <input type="text" id="${id}-website" name="website" tabindex="-1" autocomplete="off">
+        </div>
         <div class="form-status" data-form-status role="status" aria-live="polite"></div>
         <button type="submit" class="btn btn--yellow btn--block">${icon("arrowRight")}Küldés</button>
       </form>

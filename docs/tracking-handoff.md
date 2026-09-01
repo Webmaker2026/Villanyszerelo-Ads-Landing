@@ -30,8 +30,8 @@ edit in `tools/site-data.js` (`gtmId`) then `node tools/generate.mjs`.
 | `quote_request` | Primary "Ajánlatot kérek" CTAs (hero, Rólunk page) | `placement` |
 | `form_start` | First focus into any lead form | `form_id` |
 | `form_submit` | Form submit attempted (before validation result is known) | `form_id` |
-| `form_success` | Form submission succeeded (real endpoint) or dev-mode simulated it | `form_id`, `mode` (`dev_simulated` when no endpoint is configured) |
-| `form_error` | Form submission failed (validation error shown, or the configured endpoint returned a non-OK response) | `form_id` |
+| `form_success` | `/send-form.php` confirmed the message was accepted for sending | `form_id` |
+| `form_error` | Form submission failed (client-side validation error, or `/send-form.php` returned a non-success response) | `form_id` |
 
 Every event also automatically includes:
 - `page_type` — one of `home`, `service`, `about`, `contact`, `thankyou`,
@@ -45,7 +45,7 @@ Every event also automatically includes:
    `placement`, `button_type`, `service`, `form_id` as event parameters.
 3. **Google Ads conversion tags**:
    - Primary conversion → trigger on `form_success` (or on `/koszonjuk/`
-     page load, which only happens after a successful/simulated submit).
+     page load, which only happens after `/send-form.php` confirms success).
    - Secondary conversion → trigger on `phone_click`, if you're tracking
      calls as a conversion (note: this counts a *click on the number*, not
      a completed call — for real call tracking, integrate a call-tracking

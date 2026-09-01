@@ -35,15 +35,18 @@
   });
 
   /* ---------------------------------------------------------
-     Lead forms (hero + contact page)
+     Lead forms (hero + service pages + contact page)
+     All forms POST to the PHP handler at /send-form.php. Client-side
+     checks below are for fast UX only — send-form.php re-validates
+     everything server-side and is the source of truth for success/failure.
   --------------------------------------------------------- */
-  var endpoint = (window.BUSINESS_DATA && window.BUSINESS_DATA.formEndpoint) || "";
-  var endpointConfigured = /^https?:\/\//i.test(endpoint);
-  var contactEmail = (window.BUSINESS_DATA && window.BUSINESS_DATA.email) || "";
+  var FORM_ENDPOINT = "/send-form.php";
 
   document.querySelectorAll("[data-lead-form]").forEach(function (form) {
     var startedTracking = false;
     var statusEl = form.querySelector("[data-form-status]");
+    var pageUrlField = form.querySelector('[name="page_url"]');
+    if (pageUrlField) pageUrlField.value = window.location.href;
 
     form.addEventListener(
       "focusin",
@@ -61,7 +64,7 @@
       var valid = true;
       form.querySelectorAll("[required]").forEach(function (field) {
         var wrapper = field.closest(".form-field");
-        var isEmpty = !field.value || !field.value.trim();
+        var isEmpty = field.type === "checkbox" ? !field.checked : !field.value || !field.value.trim();
         if (wrapper) wrapper.classList.toggle("form-field--error", isEmpty);
         if (isEmpty) valid = false;
       });
@@ -69,7 +72,7 @@
       if (window.trackEvent) window.trackEvent("form_submit", { form_id: form.id || "" });
 
       if (!valid) {
-        showStatus(statusEl, "error", "Kérjük, töltse ki a kötelező mezőket.");
+        showStatus(statusEl, "error", "Kérjük, töltse ki a kötelező mezőket, és fogadja el az adatkezelési tájékoztatót.");
         return;
       }
 
@@ -80,52 +83,31 @@
         submitBtn.textContent = "Küldés...";
       }
 
-      // No form backend configured yet: fall back to a pre-filled mailto
-      // so the lead is never silently lost, and be upfront that the visitor
-      // still needs to hit send in their own mail app (with the phone
-      // number offered as the reliable alternative).
-      if (!endpointConfigured) {
-        if (window.trackEvent) window.trackEvent("form_success", { form_id: form.id || "", mode: "mailto_fallback" });
-        if (contactEmail) {
-          var data = new FormData(form);
-          var lines = [
-            "Név: " + (data.get("name") || ""),
-            "Telefonszám: " + (data.get("phone") || ""),
-          ];
-          if (data.has("city")) lines.push("Település: " + (data.get("city") || ""));
-          lines.push("Üzenet: " + (data.get("message") || ""));
-          var mailto =
-            "mailto:" + contactEmail +
-            "?subject=" + encodeURIComponent("Ajánlatkérés a weboldalról") +
-            "&body=" + encodeURIComponent(lines.join("\n"));
-          window.location.href = mailto;
-        }
-        showStatus(
-          statusEl,
-          "success",
-          "Megnyitottuk az e-mail programját a kitöltött adatokkal — kérjük, küldje el az üzenetet. Ha nem nyílt meg, hívjon minket telefonon: " + (window.BUSINESS_DATA ? window.BUSINESS_DATA.phoneDisplay : "") + "."
-        );
+      function resetButton() {
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = submitBtn.dataset.originalText || "Küldés";
         }
-        return;
       }
 
       var formData = new FormData(form);
-      fetch(endpoint, { method: "POST", body: formData, headers: { Accept: "application/json" } })
+      fetch(FORM_ENDPOINT, { method: "POST", body: formData, headers: { Accept: "application/json" } })
         .then(function (res) {
-          if (!res.ok) throw new Error("submit_failed");
-          if (window.trackEvent) window.trackEvent("form_success", { form_id: form.id || "" });
-          window.location.href = "/koszonjuk/";
+          return res
+            .json()
+            .catch(function () {
+              return null;
+            })
+            .then(function (data) {
+              if (!res.ok || !data || data.success !== true) throw new Error("submit_failed");
+              if (window.trackEvent) window.trackEvent("form_success", { form_id: form.id || "" });
+              window.location.href = "/koszonjuk/";
+            });
         })
         .catch(function () {
           if (window.trackEvent) window.trackEvent("form_error", { form_id: form.id || "" });
-          showStatus(statusEl, "error", "Hiba történt a küldés során. Kérjük, hívjon minket telefonon.");
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = submitBtn.dataset.originalText || "Küldés";
-          }
+          showFormError(statusEl);
+          resetButton();
         });
     });
   });
@@ -134,5 +116,19 @@
     if (!el) return;
     el.textContent = message;
     el.className = "form-status is-visible form-status--" + type;
+  }
+
+  // Sending failed server-side: never redirect to the thank-you page, and
+  // always surface the phone number as the fallback so a lead is never
+  // silently lost. Uses innerHTML with static app data only (no user
+  // input), to render the phone number as a clickable tel: link.
+  function showFormError(el) {
+    if (!el) return;
+    var phoneDisplay = (window.BUSINESS_DATA && window.BUSINESS_DATA.phoneDisplay) || "";
+    var phoneTel = (window.BUSINESS_DATA && window.BUSINESS_DATA.phoneTel) || "";
+    el.innerHTML =
+      "Hiba történt a küldés során. Kérjük, próbálja újra, vagy hívjon minket telefonon: " +
+      '<a href="tel:' + phoneTel + '">' + phoneDisplay + "</a>.";
+    el.className = "form-status is-visible form-status--error";
   }
 })();
